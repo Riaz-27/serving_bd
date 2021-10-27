@@ -144,7 +144,7 @@ class HomeScreen extends StatelessWidget {
               Image(
                 image: NetworkImage(imageurl),
                 height: 35,
-                width: 35,
+                width: 45,
               ),
               const SizedBox(
                 height: 15,
