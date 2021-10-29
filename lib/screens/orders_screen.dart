@@ -26,28 +26,32 @@ class _OrderScreenState extends State<OrderScreen> {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-    return Column(
-      children: [
-        Container(
-          margin: const EdgeInsets.symmetric(vertical: 20),
-          child: Row(
-            children: [
-              buildTopNav(0, "On Cart"),
-              buildTopNav(1, "Processing"),
-              buildTopNav(2, "Recent Orders"),
-            ],
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                buildTopNav(0, "On Cart"),
+                buildTopNav(1, "Processing"),
+                buildTopNav(2, "Recent Orders"),
+              ],
+            ),
           ),
-        ),
-        widgetsList[_selectedIndex],
-      ],
+          widgetsList[_selectedIndex],
+        ],
+      ),
     );
   }
 
   Widget buildTopNav(int index, String text) {
     final isActive = _selectedIndex == index;
     return InkWell(
-      child: Container(
-        margin: const EdgeInsets.only(right: 10, left: 10),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
         height: 45,
         width: 110,
         child: InkWell(

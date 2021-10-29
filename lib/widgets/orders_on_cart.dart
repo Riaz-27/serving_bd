@@ -8,16 +8,17 @@ class OrdersOnCart extends StatelessWidget {
         itemCount: 1,
         itemBuilder: (_, index) {
           return Padding(
-            padding:  EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            padding: const EdgeInsets.symmetric(vertical: 10),
             child: Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              elevation: 4,
+              elevation: 3,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,6 +29,9 @@ class OrdersOnCart extends StatelessWidget {
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
+                        ),
+                        SizedBox(
+                          height: 10,
                         ),
                         Text(
                           "800 - 1000 sft",
@@ -42,77 +46,79 @@ class OrdersOnCart extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(Icons.remove, size: 20,),
+                            Container(
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                  bottomLeft: Radius.circular(10),
+                                ),
+                                color: Color(0xFFC61F62),
+                              ),
+                              height: 25,
+                              width: 30,
+                              child: GestureDetector(
+                                onTap: () {},
+                                child: const Icon(
+                                  Icons.remove,
+                                  size: 20,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
-                            SizedBox(
-                              width: 40,
-                              child: Text("1 Unit"),
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: const Color(0xFFC61F62),
+                                ),
+                              ),
+                              height: 25,
+                              width: 45,
+                              child: Center(
+                                child: Text(
+                                  "1 Unit",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
                             ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(Icons.add, size: 20,),
-                            )
+                            Container(
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(10),
+                                  bottomRight: Radius.circular(10),
+                                ),
+                                color: Color(0xFFC61F62),
+                              ),
+                              height: 25,
+                              width: 30,
+                              child: GestureDetector(
+                                onTap: () {},
+                                child: const Icon(
+                                  Icons.add,
+                                  size: 20,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
-                        Text("data")
+                        const SizedBox(
+                          height: 10,
+                          width: 80,
+                        ),
+                        Text(
+                          "৳  4,500",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
                       ],
                     )
                   ],
                 ),
               ),
-              // child: Padding(
-              //   padding:
-              //       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              //   child: ListTile(
-              //     title: Text(
-              //       "Home Deep Clean",
-              //       style: TextStyle(
-              //         fontSize: 18,
-              //         fontWeight: FontWeight.bold,
-              //       ),
-              //     ),
-              //     subtitle: Text(
-              //       "800 - 1000 sft",
-              //       style: TextStyle(
-              //         fontSize: 14,
-              //       ),
-              //     ),
-              //     trailing: Padding(
-              //       padding: const EdgeInsets.symmetric(vertical: 10),
-              //       child: Column(
-              //         children: [
-              //           SizedBox(
-              //             width: 80,
-              //             height: 30,
-              //             child: Row(
-              //               children: [
-              //                 IconButton(
-              //                   icon: Icon(Icons.remove,size: 30,),
-              //                   onPressed: () {},
-              //                 ),
-              //                 SizedBox(
-              //                   width: 40,
-              //                   child: Text("1 Unit"),
-              //                 ),
-              //                 IconButton(
-              //                   icon: Icon(Icons.add,size: 30,),
-              //                   onPressed: () {},
-              //                 )
-              //               ],
-              //             ),
-              //           ),
-              //           SizedBox(
-              //             height: 5,
-              //           ),
-              //           Text("1"),
-              //           Text("1"),
-              //         ],
-              //       ),
-              //     ),
-              //   ),
-              // ),
             ),
           );
         },

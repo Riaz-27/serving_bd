@@ -38,8 +38,8 @@ class HomeScreen extends StatelessWidget {
             Card(
               margin: const EdgeInsets.symmetric(horizontal: 20),
               elevation: 3,
-              shape:
-                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
               child: Container(
                 height: 125,
                 decoration: BoxDecoration(
@@ -62,6 +62,10 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   const Text(
                     "Categories",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(
                     height: 25,
@@ -100,11 +104,14 @@ class HomeScreen extends StatelessWidget {
                             "https://s3.ap-south-1.amazonaws.com/cdn-shebaxyz/images/category_images/icons_png_hover/1592147258_tiwnn.png",
                         title: "Cleaning",
                       ),
-                      buildCategoryCard(
-                        imageurl:
-                            "https://cdn-marketplacexyz.s3.ap-south-1.amazonaws.com/sheba_xyz/images/svg/all-services.svg",
-                        title: "All Services",
-                        isSvg: true,
+                      InkWell(
+                        onTap: () {},
+                        child: buildCategoryCard(
+                          imageurl:
+                              "https://cdn-marketplacexyz.s3.ap-south-1.amazonaws.com/sheba_xyz/images/svg/all-services.svg",
+                          title: "All Services",
+                          isSvg: true,
+                        ),
                       ),
                     ],
                   ),
@@ -118,40 +125,40 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-    Widget buildCategoryCard(
-        {required String imageurl, required String title, bool isSvg = false}) {
-      return Container(
-        width: 106,
-        height: 106,
-        margin: EdgeInsets.only(right: 17),
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+Widget buildCategoryCard(
+    {required String imageurl, required String title, bool isSvg = false}) {
+  return Container(
+    width: 106,
+    height: 106,
+    margin: const EdgeInsets.only(right: 17),
+    child: Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      elevation: 5,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(
+            height: 20,
           ),
-          elevation: 5,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 20,
-              ),
-              isSvg?
-              SvgPicture.network(
-                imageurl,
-                height: 35,
-                width: 35,
-              ):
-              Image(
-                image: NetworkImage(imageurl),
-                height: 35,
-                width: 45,
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Text(title),
-            ],
+          isSvg
+              ? SvgPicture.network(
+                  imageurl,
+                  height: 35,
+                  width: 35,
+                )
+              : Image(
+                  image: NetworkImage(imageurl),
+                  height: 35,
+                  width: 45,
+                ),
+          const SizedBox(
+            height: 15,
           ),
-        ),
-      );
-    }
+          Text(title),
+        ],
+      ),
+    ),
+  );
+}

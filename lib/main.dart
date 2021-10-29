@@ -16,8 +16,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Serving.bd',
       theme: ThemeData(
-        primaryColor: Color(0xFFC61F62),
-        scaffoldBackgroundColor: Color(0xFFF6F7F9),
+        primaryColor: const Color(0xFFC61F62),
+        scaffoldBackgroundColor: const Color(0xFFF5F6FB),
       ),
       home: MainPage(),
     );
@@ -61,7 +61,7 @@ class _MainPageState extends State<MainPage> {
         leading: GestureDetector(
           onTap: () => _scaffoldKey.currentState!.openDrawer(),
           child: Container(
-            margin: EdgeInsets.all(8),
+            margin: const EdgeInsets.all(8),
             height: 80,
             width: 80,
             decoration: const BoxDecoration(
