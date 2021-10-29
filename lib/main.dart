@@ -4,6 +4,7 @@ import './screens/home_screen.dart';
 import './screens/favorite_screen.dart';
 import './screens/orders_screen.dart';
 import './widgets/app_drawer.dart';
+import './screens/services_screens.dart';
 
 void main() {
   runApp(MyApp());
@@ -20,6 +21,9 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFFF5F6FB),
       ),
       home: MainPage(),
+      routes: {
+        ServicesScreen.routeName : (ctx) => ServicesScreen(),
+      },
     );
   }
 }
@@ -47,7 +51,6 @@ class _MainPageState extends State<MainPage> {
       OrderScreen(),
     ];
 
-
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
@@ -56,20 +59,23 @@ class _MainPageState extends State<MainPage> {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         toolbarHeight: 80,
-        centerTitle: true,
+        centerTitle: true,  
         title: Text(appBarTitles[_selectedItemIndex]),
         leading: GestureDetector(
           onTap: () => _scaffoldKey.currentState!.openDrawer(),
-          child: Container(
-            margin: const EdgeInsets.all(8),
-            height: 80,
-            width: 80,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: NetworkImage(
-                    "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              height: 80,
+              width: 80,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(
+                    "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+                  ),
+                ),
               ),
             ),
           ),
@@ -104,8 +110,8 @@ class _MainPageState extends State<MainPage> {
     final double _iconSize = index == _selectedItemIndex ? 35 : 28;
     // if(index == _selectedItemIndex) icon = iconList[index];
     final _iconColor = index == _selectedItemIndex
-        ? Color.fromRGBO(198, 31, 98, 1)
-        : Color.fromRGBO(55, 54, 86, 1);
+        ? const Color.fromRGBO(198, 31, 98, 1)
+        : const Color.fromRGBO(55, 54, 86, 1);
 
     return Container(
       color: Colors.white,
@@ -131,21 +137,5 @@ class _MainPageState extends State<MainPage> {
         ],
       ),
     );
-    // return GestureDetector(
-    //   onTap: () {
-    //     setState(() {
-    //       _selectedItemIndex = index;
-    //     });
-    //   },
-    //   child: Container(
-    //     width: deviceSize.width / 4,
-    //     height: 60,
-    //     child: Icon(
-    //       icon,
-    //       size: _iconSize,
-    //       color: _iconColor,
-    //     ),
-    //   ),
-    // );
   }
 }

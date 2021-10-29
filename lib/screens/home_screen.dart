@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:serving_bd/screens/services_screens.dart';
 
 class HomeScreen extends StatelessWidget {
-  static const routeName = '/home-page';
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +105,15 @@ class HomeScreen extends StatelessWidget {
                         title: "Cleaning",
                       ),
                       InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (ctx) {
+                                return ServicesScreen();
+                              },
+                            ),
+                          );
+                        },
                         child: buildCategoryCard(
                           imageurl:
                               "https://cdn-marketplacexyz.s3.ap-south-1.amazonaws.com/sheba_xyz/images/svg/all-services.svg",

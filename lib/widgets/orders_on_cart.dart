@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 
-class OrdersOnCart extends StatelessWidget {
+class OrdersOnCart extends StatefulWidget {
+  @override
+  State<OrdersOnCart> createState() => _OrdersOnCartState();
+}
+
+class _OrdersOnCartState extends State<OrdersOnCart> {
+  int _quantity = 1;
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -15,7 +21,8 @@ class OrdersOnCart extends StatelessWidget {
               ),
               elevation: 3,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +64,13 @@ class OrdersOnCart extends StatelessWidget {
                               height: 25,
                               width: 30,
                               child: GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  if (_quantity > 1) {
+                                    setState(() {
+                                      _quantity--;
+                                    });
+                                  }
+                                },
                                 child: const Icon(
                                   Icons.remove,
                                   size: 20,
@@ -72,10 +85,10 @@ class OrdersOnCart extends StatelessWidget {
                                 ),
                               ),
                               height: 25,
-                              width: 45,
+                              width: 50,
                               child: Center(
                                 child: Text(
-                                  "1 Unit",
+                                  "$_quantity Unit",
                                   style: TextStyle(
                                     fontSize: 14,
                                   ),
@@ -93,7 +106,11 @@ class OrdersOnCart extends StatelessWidget {
                               height: 25,
                               width: 30,
                               child: GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  setState(() {
+                                    _quantity++;
+                                  });
+                                },
                                 child: const Icon(
                                   Icons.add,
                                   size: 20,
@@ -108,7 +125,7 @@ class OrdersOnCart extends StatelessWidget {
                           width: 80,
                         ),
                         Text(
-                          "৳  4,500",
+                          "৳  ${_quantity*4500}",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
