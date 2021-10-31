@@ -17,12 +17,17 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Serving.bd',
       theme: ThemeData(
-        primaryColor: const Color(0xFFC61F62),
-        scaffoldBackgroundColor: const Color(0xFFF5F6FB),
-      ),
+          primaryColor: const Color(0xFFC61F62),
+          scaffoldBackgroundColor: const Color(0xFFF5F6FB),
+          appBarTheme: const AppBarTheme(
+            foregroundColor: Colors.black,
+            backgroundColor: Colors.white,
+            toolbarHeight: 80,
+            centerTitle: true,
+          )),
       home: MainPage(),
       routes: {
-        ServicesScreen.routeName : (ctx) => ServicesScreen(),
+        ServicesScreen.routeName: (ctx) => ServicesScreen(),
       },
     );
   }
@@ -56,10 +61,6 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        toolbarHeight: 80,
-        centerTitle: true,  
         title: Text(appBarTitles[_selectedItemIndex]),
         leading: GestureDetector(
           onTap: () => _scaffoldKey.currentState!.openDrawer(),
