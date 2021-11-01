@@ -1,7 +1,9 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/services.dart';
+import '../providers/service.dart';
+
 import 'package:serving_bd/screens/service_category_screen.dart';
 
 class ServicesScreen extends StatefulWidget {
@@ -14,6 +16,26 @@ class ServicesScreen extends StatefulWidget {
 
 class _ServicesScreenState extends State<ServicesScreen> {
   int _selectedIndex = 0;
+  List<String> _categories = [];
+  List<Service> _services = [];
+  var _isLoading = true;
+
+  @override
+  void initState() {
+    setState(() {
+      _isLoading = true;
+    });
+    context.read<Services>().fetchAndSetServices().then((_) {
+      _categories = context.read<Services>().categories;
+      _services = context.read<Services>().services;
+      setState(() {
+        _isLoading = false;
+      });
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,41 +48,45 @@ class _ServicesScreenState extends State<ServicesScreen> {
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 45,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 5,
-                itemBuilder: (_, index) {
-                  return buildTopNav(index, "Test");
-                },
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: 3,
-                itemBuilder: (_, index) {
-                  return buildServiceList(
-                    index: index,
-                    title: "AC Basic Service",
-                    subtitle: "Starts from ৳ 500",
-                    imageUrl:
-                        "https://s3.ap-south-1.amazonaws.com/cdn-shebaxyz/images/categories_images/thumbs/1619427700_acservicing.jpg",
-                  );
-                },
-              ),
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(
+                  color: Color.fromRGBO(198, 31, 98, 1)),
             )
-          ],
-        ),
-      ),
+          : Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 45,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _categories.length,
+                      itemBuilder: (_, index) {
+                        return buildTopNav(index, _categories[index]);
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: _services.length,
+                      itemBuilder: (_, index) {
+                        return buildServiceList(
+                          index: index,
+                          title: _services[index].name,
+                          subtitle: "Starts from ৳ 500",
+                          imageUrl: (_services[index].imageUrl),
+                        );
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ),
     );
   }
 
@@ -72,18 +98,20 @@ class _ServicesScreenState extends State<ServicesScreen> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         height: 45,
-        width: 110,
         child: InkWell(
           child: Card(
             elevation: 4,
             color: isActive ? color1 : Colors.white,
             child: Center(
-              child: Text(
-                text,
-                style: TextStyle(
-                  fontWeight: FontWeight.normal,
-                  fontSize: 14,
-                  color: isActive ? Colors.white : color2,
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Text(
+                  text,
+                  style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    fontSize: 14,
+                    color: isActive ? Colors.white : color2,
+                  ),
                 ),
               ),
             ),
@@ -109,7 +137,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) {
-              return ServiceCategoryScreen(title);
+              return ServiceCategoryScreen(title: title, selectedServiceIndex: index);
             },
           ),
         );

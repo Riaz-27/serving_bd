@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:serving_bd/screens/services_screens.dart';
+
+import '../providers/services.dart';
+import '../screens/services_screens.dart';
 
 class HomeScreen extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
@@ -106,13 +108,8 @@ class HomeScreen extends StatelessWidget {
                       ),
                       InkWell(
                         onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (ctx) {
-                                return ServicesScreen();
-                              },
-                            ),
-                          );
+                          Navigator.of(context)
+                              .pushNamed(ServicesScreen.routeName);
                         },
                         child: buildCategoryCard(
                           imageurl:

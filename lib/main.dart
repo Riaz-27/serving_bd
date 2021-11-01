@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import './screens/home_screen.dart';
 import './screens/favorite_screen.dart';
 import './screens/orders_screen.dart';
 import './widgets/app_drawer.dart';
 import './screens/services_screens.dart';
+import './providers/services.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => Services(), 
+        )
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

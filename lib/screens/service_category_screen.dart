@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:serving_bd/providers/sub_category.dart';
+
+import '../providers/service.dart';
+import '../providers/services.dart';
 
 class ServiceCategoryScreen extends StatefulWidget {
   final String title;
-  const ServiceCategoryScreen(this.title, {Key? key}) : super(key: key);
+  final int selectedServiceIndex;
+  const ServiceCategoryScreen({
+    Key? key,
+    required this.title,
+    required this.selectedServiceIndex,
+  }) : super(key: key);
 
   @override
   State<ServiceCategoryScreen> createState() => _ServiceCategoryScreenState();
@@ -11,8 +21,13 @@ class ServiceCategoryScreen extends StatefulWidget {
 class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
   int _quantity = 0;
   double _total = 0;
+
   @override
   Widget build(BuildContext context) {
+    //Fetching sub categories
+    List<Service> _services = context.read<Services>().services;
+    List<SubCategory> _subCategories = _services[widget.selectedServiceIndex].subCategory;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -47,12 +62,12 @@ class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: 1,
+                itemCount: _subCategories.length,
                 itemBuilder: (_, index) {
                   return buildCatList(
-                    catName: "1 - 1.5 Ton",
-                    price: 500,
-                    unit: "unit",
+                    catName: _subCategories[index].title,
+                    price: _subCategories[index].price.toDouble(),
+                    unit: _subCategories[index].unit,
                     index: index,
                   );
                 },
@@ -84,11 +99,14 @@ class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  catName,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                SizedBox(
+                  width: 180,
+                  child: Text(
+                    catName,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 const SizedBox(
@@ -219,7 +237,7 @@ class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
             ),
             child: SizedBox(
               height: 40,
-              width: (deviceSize.width/2)-10,
+              width: (deviceSize.width / 2) - 10,
               child: Center(
                 child: Text(
                   "Total ৳ $_total",
@@ -237,9 +255,9 @@ class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
               borderRadius: BorderRadius.circular(10),
             ),
             color: const Color(0xFFC61F62),
-            child:SizedBox(
+            child: SizedBox(
               height: 40,
-              width: (deviceSize.width/2)-50,
+              width: (deviceSize.width / 2) - 50,
               child: const Center(
                 child: Text(
                   "Proceed",
