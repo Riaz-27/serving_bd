@@ -17,7 +17,7 @@ class Services with ChangeNotifier {
   Future<void> fetchAndSetServices() async {
     try {
       var url = Uri.parse(
-          'https://serving-bd-default-rtdb.asia-southeast1.firebasedatabase.app/services.json');
+          'https://serving-bd-2-default-rtdb.asia-southeast1.firebasedatabase.app/services.json');
       final response = await http.get(url);
       print(response.body);
       final List<Service> loadedServices = [];
@@ -32,14 +32,14 @@ class Services with ChangeNotifier {
               extractedSubCat.add(
                 SubCategory(
                   title: subCat['title'],
-                  price: (subCat['price'] as int).toDouble(),
+                  price: (subCat['price'] as num),
                   unit: subCat['unit'],
                 ));
             }
             loadedServices.add(
               Service(
                 name: serviceName,
-                imageUrl: data['imageUrl'],
+                imageUrl: (data['imageUrl']),
                 categoryName: cat,
                 subCategory: extractedSubCat,
               ),

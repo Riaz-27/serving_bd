@@ -1,5 +1,5 @@
 class SubCategory {
-  final double price;
+  final num price;
   final String title;
   final String unit;
 
