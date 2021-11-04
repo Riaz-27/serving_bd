@@ -8,10 +8,12 @@ import '../providers/services.dart';
 class ServiceCategoryScreen extends StatefulWidget {
   final String title;
   final int selectedServiceIndex;
+  final int selectedCategoryIndex;
   const ServiceCategoryScreen({
     Key? key,
     required this.title,
     required this.selectedServiceIndex,
+    required this.selectedCategoryIndex,
   }) : super(key: key);
 
   @override
@@ -25,8 +27,9 @@ class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
   @override
   Widget build(BuildContext context) {
     //Fetching sub categories
-    List<Service> _services = context.read<Services>().services;
-    List<SubCategory> _subCategories = _services[widget.selectedServiceIndex].subCategory;
+    List<List<Service>> _services = context.read<Services>().services;
+    Service _selectedService = _services[widget.selectedCategoryIndex][widget.selectedServiceIndex];
+    List<SubCategory> _subCategories = _selectedService.subCategory;
 
     return Scaffold(
       appBar: AppBar(
@@ -50,9 +53,9 @@ class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Select Ton of Your AC",
-              style: TextStyle(
+            Text(
+              _selectedService.subCategoryTitle,
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
               ),

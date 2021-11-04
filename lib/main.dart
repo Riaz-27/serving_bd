@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:serving_bd/providers/auth.dart';
+import 'package:serving_bd/screens/auth_screen.dart';
 
 import './screens/home_screen.dart';
 import './screens/favorite_screen.dart';
@@ -13,8 +15,11 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => Services(), 
-        )
+          create: (_) => Services(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => Auth(),
+        ),
       ],
       child: MyApp(),
     ),
@@ -24,22 +29,24 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Serving.bd',
-      theme: ThemeData(
-          primaryColor: const Color(0xFFC61F62),
-          scaffoldBackgroundColor: const Color(0xFFF5F6FB),
-          appBarTheme: const AppBarTheme(
-            foregroundColor: Colors.black,
-            backgroundColor: Colors.white,
-            toolbarHeight: 80,
-            centerTitle: true,
-          )),
-      home: MainPage(),
-      routes: {
-        ServicesScreen.routeName: (ctx) => ServicesScreen(),
-      },
+    return Consumer<Auth>(
+      builder: (ctx, auth, _) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Serving.bd',
+        theme: ThemeData(
+            primaryColor: const Color(0xFFC61F62),
+            scaffoldBackgroundColor: const Color(0xFFF5F6FB),
+            appBarTheme: const AppBarTheme(
+              foregroundColor: Colors.black,
+              backgroundColor: Colors.white,
+              toolbarHeight: 80,
+              centerTitle: true,
+            )),
+        home: auth.isAuth ? MainPage() : AuthScreen(),
+        routes: {
+          ServicesScreen.routeName: (ctx) => ServicesScreen(),
+        },
+      ),
     );
   }
 }
@@ -63,7 +70,7 @@ class _MainPageState extends State<MainPage> {
     final screens = [
       HomeScreen(),
       FavoriteScreen(),
-      HomeScreen(),
+      FavoriteScreen(),
       OrderScreen(),
     ];
 

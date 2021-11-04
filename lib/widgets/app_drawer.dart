@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:serving_bd/providers/auth.dart';
+import 'package:serving_bd/screens/auth_screen.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -35,7 +39,7 @@ class AppDrawer extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
+                    children: const [
                       Icon(
                         Icons.location_on_outlined,
                         color: Color.fromRGBO(198, 31, 98, 1),
@@ -46,17 +50,42 @@ class AppDrawer extends StatelessWidget {
                 ],
               ),
             ),
-            drawer_list(Icons.people_alt_outlined, "Profile"),
-            drawer_list(Icons.settings_outlined, "Settings"),
-            drawer_list(Icons.shopping_cart_outlined, "Orders"),
-            drawer_list(Icons.logout_outlined, "Logout"),
+            drawerList(
+              ctx: context,
+              icon: Icons.people_alt_outlined,
+              text: "Profile",
+              index: 0,
+            ),
+            drawerList(
+              ctx: context,
+              icon: Icons.settings_outlined,
+              text: "Settings",
+              index: 1,
+            ),
+            drawerList(
+              ctx: context,
+              icon: Icons.shopping_cart_outlined,
+              text: "Orders",
+              index: 2,
+            ),
+            drawerList(
+              ctx: context,
+              icon: Icons.logout_outlined,
+              text: "Logout",
+              index: 3,
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget drawer_list(IconData icon, String text) {
+  Widget drawerList({
+    required BuildContext ctx,
+    required IconData icon,
+    required String text,
+    required int index,
+  }) {
     return Padding(
       padding: EdgeInsets.only(left: 20),
       child: ListTile(
@@ -65,7 +94,16 @@ class AppDrawer extends StatelessWidget {
           color: Color.fromRGBO(198, 31, 98, 1),
         ),
         title: Text(text),
-        onTap: () {},
+        onTap: () {
+          if (index == 3) {
+            ctx.read<Auth>().logout();
+            Navigator.of(ctx).pushReplacement(
+              MaterialPageRoute(
+                builder: (_) => AuthScreen(),
+              ),
+            );
+          }
+        },
       ),
     );
   }

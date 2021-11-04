@@ -17,7 +17,7 @@ class ServicesScreen extends StatefulWidget {
 class _ServicesScreenState extends State<ServicesScreen> {
   int _selectedIndex = 0;
   List<String> _categories = [];
-  List<Service> _services = [];
+  List<List<Service>> _services = [];
   var _isLoading = true;
 
   @override
@@ -73,13 +73,13 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   ),
                   Expanded(
                     child: ListView.builder(
-                      itemCount: _services.length,
+                      itemCount: _services[_selectedIndex].length,
                       itemBuilder: (_, index) {
                         return buildServiceList(
                           index: index,
-                          title: _services[index].name,
-                          subtitle: "Starts from ৳ 500",
-                          imageUrl: (_services[index].imageUrl),
+                          title: _services[_selectedIndex][index].name,
+                          subtitle: _services[_selectedIndex][index].subtitle,
+                          imageUrl: (_services[_selectedIndex][index].imageUrl),
                         );
                       },
                     ),
@@ -137,7 +137,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) {
-              return ServiceCategoryScreen(title: title, selectedServiceIndex: index);
+              return ServiceCategoryScreen(title: title, selectedServiceIndex: index, selectedCategoryIndex: _selectedIndex,);
             },
           ),
         );
