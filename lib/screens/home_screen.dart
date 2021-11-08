@@ -53,10 +53,10 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              height: 25,
+              height: 20,
             ),
             Container(
-              margin: const EdgeInsets.only(left: 20),
+              margin: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -70,7 +70,14 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(
                     height: 25,
                   ),
-                  Row(
+                  GridView(
+                    shrinkWrap: true,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 5,
+                      mainAxisSpacing: 5,
+                    ),
                     children: [
                       buildCategoryCard(
                         imageurl:
@@ -80,20 +87,13 @@ class HomeScreen extends StatelessWidget {
                       buildCategoryCard(
                         imageurl:
                             "https://s3.ap-south-1.amazonaws.com/cdn-shebaxyz/images/categories_images/icons_png/1583681524_tiwnn_52x52.webp",
-                        title: "Repair",
+                        title: "Appliance Repair",
                       ),
                       buildCategoryCard(
                         imageurl:
                             "https://s3.ap-south-1.amazonaws.com/cdn-shebaxyz/images/v4_uploads/category_icons/226/default_52x52.webp",
                         title: "Painting",
                       ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  Row(
-                    children: [
                       buildCategoryCard(
                         imageurl:
                             "https://s3.ap-south-1.amazonaws.com/cdn-shebaxyz/images/categories_images/icons_png/1583681093_tiwnn_52x52.webp",
@@ -126,42 +126,47 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-}
 
-Widget buildCategoryCard(
-    {required String imageurl, required String title, bool isSvg = false}) {
-  return Container(
-    width: 106,
-    height: 106,
-    margin: const EdgeInsets.only(right: 17),
-    child: Card(
+  Widget buildCategoryCard({
+    required String imageurl,
+    required String title,
+    bool isSvg = false,
+  }) {
+    return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      elevation: 5,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          isSvg
-              ? SvgPicture.network(
-                  imageurl,
-                  height: 35,
-                  width: 35,
-                )
-              : Image(
-                  image: NetworkImage(imageurl),
-                  height: 35,
-                  width: 45,
-                ),
-          const SizedBox(
-            height: 15,
-          ),
-          Text(title),
-        ],
+      elevation: 3,
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(
+              height: 10,
+            ),
+            isSvg
+                ? SvgPicture.network(
+                    imageurl,
+                    height: 35,
+                    width: 35,
+                  )
+                : Image(
+                    image: NetworkImage(imageurl),
+                    height: 35,
+                    width: 35,
+                  ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
