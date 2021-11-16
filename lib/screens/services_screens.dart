@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:serving_bd/widgets/services_list_view.dart';
 
 import '../providers/services.dart';
 import '../providers/service.dart';
@@ -75,8 +76,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
                     child: ListView.builder(
                       itemCount: _services[_selectedIndex].length,
                       itemBuilder: (_, index) {
-                        return buildServiceList(
+                        return ServiceListView(
                           index: index,
+                          categoryIndex: _selectedIndex,
                           title: _services[_selectedIndex][index].name,
                           subtitle: _services[_selectedIndex][index].subtitle,
                           imageUrl: (_services[_selectedIndex][index].imageUrl),
@@ -121,115 +123,6 @@ class _ServicesScreenState extends State<ServicesScreen> {
               _selectedIndex = index;
             });
           },
-        ),
-      ),
-    );
-  }
-
-  Widget buildServiceList({
-    required int index,
-    required String title,
-    required String subtitle,
-    required String imageUrl,
-  }) {
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) {
-              return ServiceCategoryScreen(title: title, selectedServiceIndex: index, selectedCategoryIndex: _selectedIndex,);
-            },
-          ),
-        );
-      },
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 80,
-                  width: 80,
-                  decoration: ShapeDecoration(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: SizedBox(
-                      height: 80,
-                      width: 80,
-                      child: Image.network(
-                        imageUrl,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        subtitle,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: () {},
-                    child: const Text(
-                      "Details",
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.normal,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Icon(
-                    Icons.chevron_right_rounded,
-                    size: 30,
-                    color: Color(0xFFC61F62),
-                  ),
-                ],
-              ),
-            )
-          ],
         ),
       ),
     );

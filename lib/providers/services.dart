@@ -23,9 +23,11 @@ class Services with ChangeNotifier {
       final List<List<Service>> loadedServices = [];
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final List<String> loadedCategory = [];
+      int categoryIndex = 0;
       extractedData.forEach((cat, serviceData) {
         loadedCategory.add(cat);
         List<Service> loadedService = [];
+        int serviceIndex = 0;
         (serviceData as Map<String, dynamic>).forEach(
           (serviceName, data) {
             List<SubCategory> extractedSubCat = [];
@@ -46,14 +48,17 @@ class Services with ChangeNotifier {
                 name: serviceName,
                 subtitle: 'Starts from ৳ $lowestPrice',
                 imageUrl: (data['imageUrl']),
-                categoryName: cat,
+                categoryIndex: categoryIndex,
                 subCategory: extractedSubCat,
                 subCategoryTitle: data['subCategoryTitle'],
+                serviceIndex: serviceIndex,
               ),
             );
+            serviceIndex++;
           },
         );
         loadedServices.add(loadedService);
+        categoryIndex++;
       });
       _categories = loadedCategory;
       _services = loadedServices;

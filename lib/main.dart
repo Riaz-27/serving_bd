@@ -4,7 +4,7 @@ import 'package:serving_bd/providers/auth.dart';
 import 'package:serving_bd/screens/auth_screen.dart';
 
 import './screens/home_screen.dart';
-import './screens/favorite_screen.dart';
+import './screens/search_screen.dart';
 import './screens/orders_screen.dart';
 import './widgets/app_drawer.dart';
 import './screens/services_screens.dart';
@@ -60,17 +60,16 @@ class _MainPageState extends State<MainPage> {
   int _selectedItemIndex = 0;
   final appBarTitles = [
     "Home",
-    "Favorites",
+    "Search",
     "Chats",
     "Orders",
   ];
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
     final screens = [
       HomeScreen(),
-      FavoriteScreen(),
-      FavoriteScreen(),
+      SearchScreen(),
+      SearchScreen(),
       OrderScreen(),
     ];
 
@@ -109,11 +108,12 @@ class _MainPageState extends State<MainPage> {
       drawer: AppDrawer(),
       body: screens[_selectedItemIndex],
       bottomNavigationBar: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          buildBottomNavBar(deviceSize, Icons.home_outlined, 0),
-          buildBottomNavBar(deviceSize, Icons.favorite_border, 1),
-          buildBottomNavBar(deviceSize, Icons.chat_outlined, 2),
-          buildBottomNavBar(deviceSize, Icons.shopping_cart_outlined, 3),
+          Flexible(flex:1 , child: buildBottomNavBar(Icons.home_outlined, 0),),
+          Flexible(flex:1 , child: buildBottomNavBar(Icons.search, 1),),
+          Flexible(flex:1 , child: buildBottomNavBar(Icons.chat_outlined, 2),),
+          Flexible(flex:1 , child: buildBottomNavBar(Icons.shopping_cart_outlined, 3),),
         ],
       ),
     );
@@ -125,7 +125,7 @@ class _MainPageState extends State<MainPage> {
   //   Icons.chat,
   //   Icons.shopping_cart
   // ];
-  Widget buildBottomNavBar(Size deviceSize, IconData icon, int index) {
+  Widget buildBottomNavBar(IconData icon, int index) {
     final double _iconSize = index == _selectedItemIndex ? 35 : 28;
     // if(index == _selectedItemIndex) icon = iconList[index];
     final _iconColor = index == _selectedItemIndex
@@ -138,7 +138,7 @@ class _MainPageState extends State<MainPage> {
       child: Row(
         children: [
           SizedBox(
-            width: deviceSize.width / 4,
+            width: 95,
             height: 60,
             child: InkWell(
               child: Icon(
