@@ -5,8 +5,6 @@ import 'package:serving_bd/widgets/services_list_view.dart';
 import '../providers/services.dart';
 import '../providers/service.dart';
 
-import 'package:serving_bd/screens/service_category_screen.dart';
-
 class ServicesScreen extends StatefulWidget {
   const ServicesScreen({Key? key}) : super(key: key);
   static const routeName = '/service-page';
@@ -39,6 +37,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if(_isLoading){
+      _selectedIndex = ModalRoute.of(context)!.settings.arguments as int;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Services"),
@@ -96,7 +98,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
     const color1 = Color.fromRGBO(198, 31, 98, 1);
     const color2 = Color.fromRGBO(55, 54, 86, 1);
     final isActive = _selectedIndex == index;
-    return InkWell(
+    return GestureDetector(
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         height: 45,
@@ -106,7 +108,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
             color: isActive ? color1 : Colors.white,
             child: Center(
               child: Padding(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Text(
                   text,
                   style: TextStyle(

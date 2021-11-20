@@ -5,6 +5,7 @@ class Service {
   final String subtitle;
   final String imageUrl;
   final int categoryIndex;
+  final String categoryName;
   final List<SubCategory> subCategory;
   final String subCategoryTitle;
   final int serviceIndex;
@@ -17,5 +18,6 @@ class Service {
     required this.subCategory,
     required this.subCategoryTitle,
     required this.serviceIndex,
+    required this.categoryName,
   });
 }

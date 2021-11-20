@@ -7,7 +7,8 @@ import '../providers/services.dart';
 import '../widgets/services_list_view.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({Key? key}) : super(key: key);
+  final bool autoFocus;
+  const SearchScreen({Key? key, this.autoFocus = false}) : super(key: key);
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -44,6 +45,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return _isLoading
         ? const Center(
             child: CircularProgressIndicator(),
@@ -58,6 +60,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       text: query,
                       hintText: "Service or Category name",
                       onChanged: searchService,
+                      autoFocus: widget.autoFocus,
                     ),
                     Expanded(
                       child: ListView.builder(
@@ -83,9 +86,10 @@ class _SearchScreenState extends State<SearchScreen> {
   void searchService(String query) {
     final services = _allServices.where((service) {
       final nameLower = service.name.toLowerCase();
+      final catLower = service.categoryName.toLowerCase();
       final searchLower = query.toLowerCase();
 
-      return nameLower.contains(searchLower);
+      return (nameLower.contains(searchLower) || catLower.contains(searchLower));
     }).toList();
 
     setState(() {

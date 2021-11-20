@@ -52,6 +52,7 @@ class Services with ChangeNotifier {
                 subCategory: extractedSubCat,
                 subCategoryTitle: data['subCategoryTitle'],
                 serviceIndex: serviceIndex,
+                categoryName: cat,
               ),
             );
             serviceIndex++;

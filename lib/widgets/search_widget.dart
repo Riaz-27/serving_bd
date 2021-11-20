@@ -4,12 +4,14 @@ class SearchWidget extends StatefulWidget {
   final String text;
   final ValueChanged<String> onChanged;
   final String hintText;
+  final bool autoFocus;
 
   const SearchWidget({
     Key? key,
     required this.text,
     required this.onChanged,
     required this.hintText,
+    required this.autoFocus,
   }) : super(key: key);
 
   @override
@@ -38,7 +40,7 @@ class _SearchWidgetState extends State<SearchWidget> {
           controller: controller,
           onChanged: widget.onChanged,
           maxLines: 1,
-          autofocus: true,
+          autofocus: widget.autoFocus,
           decoration: InputDecoration(
             isDense: true,
             hintText: widget.hintText,

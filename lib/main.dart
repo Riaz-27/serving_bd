@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
             )),
         home: auth.isAuth ? MainPage() : AuthScreen(),
         routes: {
-          ServicesScreen.routeName: (ctx) => ServicesScreen(),
+          ServicesScreen.routeName: (ctx) => const ServicesScreen(),
         },
       ),
     );
@@ -52,12 +52,15 @@ class MyApp extends StatelessWidget {
 }
 
 class MainPage extends StatefulWidget {
+  int selectedItemIndex = 0;
+  bool autoFocus;
+  MainPage({this.selectedItemIndex = 0, this.autoFocus = false});
   @override
   _MainPageState createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
-  int _selectedItemIndex = 0;
+  
   final appBarTitles = [
     "Home",
     "Search",
@@ -68,7 +71,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     final screens = [
       HomeScreen(),
-      SearchScreen(),
+      SearchScreen(autoFocus: widget.autoFocus,),
       SearchScreen(),
       OrderScreen(),
     ];
@@ -78,7 +81,7 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text(appBarTitles[_selectedItemIndex]),
+        title: Text(appBarTitles[widget.selectedItemIndex]),
         leading: GestureDetector(
           onTap: () => _scaffoldKey.currentState!.openDrawer(),
           child: Padding(
@@ -106,7 +109,7 @@ class _MainPageState extends State<MainPage> {
         ],
       ),
       drawer: AppDrawer(),
-      body: screens[_selectedItemIndex],
+      body: screens[widget.selectedItemIndex],
       bottomNavigationBar: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -126,9 +129,9 @@ class _MainPageState extends State<MainPage> {
   //   Icons.shopping_cart
   // ];
   Widget buildBottomNavBar(IconData icon, int index) {
-    final double _iconSize = index == _selectedItemIndex ? 35 : 28;
+    final double _iconSize = index == widget.selectedItemIndex ? 35 : 28;
     // if(index == _selectedItemIndex) icon = iconList[index];
-    final _iconColor = index == _selectedItemIndex
+    final _iconColor = index == widget.selectedItemIndex
         ? const Color.fromRGBO(198, 31, 98, 1)
         : const Color.fromRGBO(55, 54, 86, 1);
 
@@ -148,7 +151,7 @@ class _MainPageState extends State<MainPage> {
               ),
               onTap: () {
                 setState(() {
-                  _selectedItemIndex = index;
+                  widget.selectedItemIndex = index;
                 });
               },
             ),

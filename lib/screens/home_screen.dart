@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:serving_bd/main.dart';
 
 import '../screens/services_screens.dart';
 
@@ -7,7 +8,6 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-    final _searchController = TextEditingController();
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -22,10 +22,21 @@ class HomeScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
-                  controller: _searchController,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => MainPage(
+                          selectedItemIndex: 1,
+                          autoFocus: true,
+                        ),
+                      ),
+                    );
+                  },
+                  readOnly: true,
                   decoration: const InputDecoration(
                     isDense: true,
-                    hintText: "Search for any services",
+                    hintText: "Search by service or categories",
                     border: InputBorder.none,
                     icon: Icon(Icons.search),
                   ),
@@ -77,41 +88,47 @@ class HomeScreen extends StatelessWidget {
                     ),
                     children: [
                       buildCategoryCard(
+                        context: context,
                         imageurl:
                             "https://s3.ap-south-1.amazonaws.com/cdn-shebaxyz/images/categories_images/icons_png/1601959826_ac_52x52.webp",
                         title: "AC Service",
+                        index: 0,
                       ),
                       buildCategoryCard(
+                        context: context,
                         imageurl:
                             "https://s3.ap-south-1.amazonaws.com/cdn-shebaxyz/images/categories_images/icons_png/1583681524_tiwnn_52x52.webp",
                         title: "Appliance Repair",
+                        index: 1,
                       ),
                       buildCategoryCard(
+                        context: context,
                         imageurl:
                             "https://s3.ap-south-1.amazonaws.com/cdn-shebaxyz/images/v4_uploads/category_icons/226/default_52x52.webp",
                         title: "Painting",
+                        index: 2,
                       ),
                       buildCategoryCard(
+                        context: context,
                         imageurl:
                             "https://s3.ap-south-1.amazonaws.com/cdn-shebaxyz/images/categories_images/icons_png/1583681093_tiwnn_52x52.webp",
                         title: "Shifting",
+                        index: 2,
                       ),
                       buildCategoryCard(
+                        context: context,
                         imageurl:
                             "https://s3.ap-south-1.amazonaws.com/cdn-shebaxyz/images/category_images/icons_png_hover/1592147258_tiwnn.png",
                         title: "Cleaning",
+                        index: 2,
                       ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.of(context)
-                              .pushNamed(ServicesScreen.routeName);
-                        },
-                        child: buildCategoryCard(
-                          imageurl:
-                              "https://cdn-marketplacexyz.s3.ap-south-1.amazonaws.com/sheba_xyz/images/svg/all-services.svg",
-                          title: "All Services",
-                          isSvg: true,
-                        ),
+                      buildCategoryCard(
+                        context: context,
+                        imageurl:
+                            "https://cdn-marketplacexyz.s3.ap-south-1.amazonaws.com/sheba_xyz/images/svg/all-services.svg",
+                        title: "All Services",
+                        isSvg: true,
+                        index: 0,
                       ),
                     ],
                   ),
@@ -125,43 +142,51 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget buildCategoryCard({
+    required BuildContext context,
     required String imageurl,
     required String title,
+    required int index,
     bool isSvg = false,
   }) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      elevation: 3,
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(
-              height: 10,
-            ),
-            isSvg
-                ? SvgPicture.network(
-                    imageurl,
-                    height: 35,
-                    width: 35,
-                  )
-                : Image(
-                    image: NetworkImage(imageurl),
-                    height: 35,
-                    width: 35,
-                  ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-            ),
-          ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context)
+            .pushNamed(ServicesScreen.routeName, arguments: index);
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        elevation: 3,
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              isSvg
+                  ? SvgPicture.network(
+                      imageurl,
+                      height: 35,
+                      width: 35,
+                    )
+                  : Image(
+                      image: NetworkImage(imageurl),
+                      height: 35,
+                      width: 35,
+                    ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );
