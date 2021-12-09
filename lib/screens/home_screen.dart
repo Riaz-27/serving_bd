@@ -5,6 +5,10 @@ import 'package:serving_bd/main.dart';
 import '../screens/services_screens.dart';
 
 class HomeScreen extends StatelessWidget {
+  Map<String,dynamic> userData;
+
+  HomeScreen({required this.userData});
+
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
@@ -27,6 +31,7 @@ class HomeScreen extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (_) => MainPage(
+                          userData: userData,
                           selectedItemIndex: 1,
                           autoFocus: true,
                         ),

@@ -9,15 +9,17 @@ import '../providers/sub_category.dart';
 class Services with ChangeNotifier {
   List<List<Service>> _services = [];
   List<String> _categories = [];
+  
+  var userToken;
 
   //getters
   List<List<Service>> get services => [..._services];
   List<String> get categories => [..._categories];
 
-  Future<void> fetchAndSetServices() async {
+  Future<void> fetchAndSetServices(String token) async {
     try {
       var url = Uri.parse(
-          'https://serving-bd-2-default-rtdb.asia-southeast1.firebasedatabase.app/services.json');
+          'https://serving-bd-2-default-rtdb.asia-southeast1.firebasedatabase.app/services.json?auth=$token');
       final response = await http.get(url);
       print(response.body);
       final List<List<Service>> loadedServices = [];

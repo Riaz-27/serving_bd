@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:serving_bd/providers/auth.dart';
 import 'package:serving_bd/widgets/search_widget.dart';
 
 import '../providers/service.dart';
@@ -27,7 +28,7 @@ class _SearchScreenState extends State<SearchScreen> {
     setState(() {
       _isLoading = true;
     });
-    context.read<Services>().fetchAndSetServices().then((_) {
+    context.read<Services>().fetchAndSetServices(context.read<Auth>().token!).then((_) {
       List<List<Service>> services = context.read<Services>().services;
       for (var catService in services) {
         for (var service in catService) {

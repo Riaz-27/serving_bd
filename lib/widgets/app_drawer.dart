@@ -3,8 +3,13 @@ import 'package:provider/provider.dart';
 
 import 'package:serving_bd/providers/auth.dart';
 import 'package:serving_bd/screens/auth_screen.dart';
+import 'package:serving_bd/screens/profile_screen.dart';
 
 class AppDrawer extends StatelessWidget {
+  Map<String, dynamic> userData;
+
+  AppDrawer({required this.userData});
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -21,30 +26,31 @@ class AppDrawer extends StatelessWidget {
                   CircleAvatar(
                     radius: 35,
                     backgroundImage: NetworkImage(
-                      "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+                      userData['profilePic'],
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
-                    "Nazrul Islam",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    userData['name'],
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "@nazrul12",
-                    style: TextStyle(fontSize: 14),
+                    userData['mobile'],
+                    style: const TextStyle(fontSize: 14),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      Icon(
+                    children: [
+                      const Icon(
                         Icons.location_on_outlined,
                         color: Color.fromRGBO(198, 31, 98, 1),
                       ),
-                      Text("Feni, Chittagong"),
+                      Text(userData['address']),
                     ],
                   )
                 ],
@@ -87,22 +93,39 @@ class AppDrawer extends StatelessWidget {
     required int index,
   }) {
     return Padding(
-      padding: EdgeInsets.only(left: 20),
+      padding: const EdgeInsets.only(left: 20),
       child: ListTile(
         leading: Icon(
           icon,
-          color: Color.fromRGBO(198, 31, 98, 1),
+          color: const Color.fromRGBO(198, 31, 98, 1),
         ),
         title: Text(text),
         onTap: () {
-          if (index == 3) {
-            ctx.read<Auth>().logout();
-            Navigator.of(ctx).pushReplacement(
-              MaterialPageRoute(
-                builder: (_) => AuthScreen(),
-              ),
-            );
+          switch (index) {
+            case 0:
+              Navigator.of(ctx).push(
+                MaterialPageRoute(
+                  builder: (_) => const ProfileScreen(),
+                ),
+              );
+              break;
+            case 3:
+              ctx.read<Auth>().logout();
+              Navigator.of(ctx).pushReplacement(
+                MaterialPageRoute(
+                  builder: (_) => const AuthScreen(),
+                ),
+              );
           }
+
+          // if (index == 3) {
+          //   ctx.read<Auth>().logout();
+          //   Navigator.of(ctx).pushReplacement(
+          //     MaterialPageRoute(
+          //       builder: (_) => const AuthScreen(),
+          //     ),
+          //   );
+          // }
         },
       ),
     );

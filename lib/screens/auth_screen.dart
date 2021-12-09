@@ -32,17 +32,23 @@ class _AuthScreenState extends State<AuthScreen> {
     setState(() {
       _isLoading = true;
     });
+    Map<String,dynamic> userData={'':''};
+
     if (_authMode == AuthMode.Login) {
       await context
           .read<Auth>()
-          .login(_authData['email']!, _authData['password']!);
+          .login(_authData['email']!, _authData['password']!).then((_) {
+            userData = context.read<Auth>().userData;
+          });
     } else {
       await context
           .read<Auth>()
-          .signup(_authData['email']!, _authData['password']!);
+          .signup(_authData['email']!, _authData['password']!).then((_){
+            userData = context.read<Auth>().userData;
+          });
     }
     Navigator.of(context)
-        .pushReplacement(MaterialPageRoute(builder: (_) => MainPage()));
+        .pushReplacement(MaterialPageRoute(builder: (_) => MainPage(userData: userData)));
     setState(() {
       _isLoading = false;
     });

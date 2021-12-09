@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
               toolbarHeight: 80,
               centerTitle: true,
             )),
-        home: auth.isAuth ? MainPage() : AuthScreen(),
+        home: auth.isAuth ? MainPage(userData: auth.userData) : AuthScreen(),
         routes: {
           ServicesScreen.routeName: (ctx) => const ServicesScreen(),
         },
@@ -54,7 +54,8 @@ class MyApp extends StatelessWidget {
 class MainPage extends StatefulWidget {
   int selectedItemIndex = 0;
   bool autoFocus;
-  MainPage({this.selectedItemIndex = 0, this.autoFocus = false});
+  Map<String,dynamic> userData;
+  MainPage({this.selectedItemIndex = 0, this.autoFocus = false, required this.userData});
   @override
   _MainPageState createState() => _MainPageState();
 }
@@ -70,11 +71,13 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     final screens = [
-      HomeScreen(),
+      HomeScreen(userData: widget.userData,),
       SearchScreen(autoFocus: widget.autoFocus,),
       SearchScreen(),
       OrderScreen(),
     ];
+
+    final userData = context.read<Auth>().userData;
 
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -89,12 +92,12 @@ class _MainPageState extends State<MainPage> {
             child: Container(
               height: 80,
               width: 80,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(
                   fit: BoxFit.cover,
                   image: NetworkImage(
-                    "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+                    userData['profilePic'].toString(),
                   ),
                 ),
               ),
@@ -108,7 +111,7 @@ class _MainPageState extends State<MainPage> {
           ),
         ],
       ),
-      drawer: AppDrawer(),
+      drawer: AppDrawer(userData: userData,),
       body: screens[widget.selectedItemIndex],
       bottomNavigationBar: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

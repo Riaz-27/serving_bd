@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:serving_bd/providers/auth.dart';
 import 'package:serving_bd/widgets/services_list_view.dart';
 
 import '../providers/services.dart';
@@ -24,7 +25,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
     setState(() {
       _isLoading = true;
     });
-    context.read<Services>().fetchAndSetServices().then((_) {
+    context.read<Services>().fetchAndSetServices(context.read<Auth>().token!).then((_) {
       _categories = context.read<Services>().categories;
       _services = context.read<Services>().services;
       setState(() {
