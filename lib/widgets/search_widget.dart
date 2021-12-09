@@ -33,7 +33,7 @@ class _SearchWidgetState extends State<SearchWidget> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      elevation: 3,
+      // elevation: 3,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextField(

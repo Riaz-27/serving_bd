@@ -105,7 +105,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
         height: 45,
         child: InkWell(
           child: Card(
-            elevation: 4,
+            // elevation: 4,
             color: isActive ? color1 : Colors.white,
             child: Center(
               child: Padding(

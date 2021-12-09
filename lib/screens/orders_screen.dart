@@ -56,7 +56,7 @@ class _OrderScreenState extends State<OrderScreen> {
         width: 110,
         child: InkWell(
           child: Card(
-            elevation: 4,
+            // elevation: 4,
             color: isActive ? color1 : Colors.white,
             child: Center(
               child: Text(

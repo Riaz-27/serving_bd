@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:serving_bd/main.dart';
@@ -5,9 +6,7 @@ import 'package:serving_bd/main.dart';
 import '../screens/services_screens.dart';
 
 class HomeScreen extends StatelessWidget {
-  Map<String,dynamic> userData;
-
-  HomeScreen({required this.userData});
+  HomeScreen();
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +20,7 @@ class HomeScreen extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              elevation: 3,
+              // elevation: 3,
               margin: const EdgeInsets.all(20),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -31,7 +30,6 @@ class HomeScreen extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (_) => MainPage(
-                          userData: userData,
                           selectedItemIndex: 1,
                           autoFocus: true,
                         ),
@@ -50,7 +48,7 @@ class HomeScreen extends StatelessWidget {
             ),
             Card(
               margin: const EdgeInsets.symmetric(horizontal: 20),
-              elevation: 3,
+              // elevation: 3,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
               child: Container(
@@ -162,7 +160,7 @@ class HomeScreen extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        elevation: 3,
+        // elevation: 3,
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: Column(

@@ -6,7 +6,6 @@ import '../main.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({Key? key}) : super(key: key);
-  
 
   @override
   State<AuthScreen> createState() => _AuthScreenState();
@@ -32,23 +31,21 @@ class _AuthScreenState extends State<AuthScreen> {
     setState(() {
       _isLoading = true;
     });
-    Map<String,dynamic> userData={'':''};
 
     if (_authMode == AuthMode.Login) {
       await context
           .read<Auth>()
-          .login(_authData['email']!, _authData['password']!).then((_) {
-            userData = context.read<Auth>().userData;
-          });
+          .login(_authData['email']!, _authData['password']!);
     } else {
       await context
           .read<Auth>()
-          .signup(_authData['email']!, _authData['password']!).then((_){
-            userData = context.read<Auth>().userData;
-          });
+          .signup(_authData['email']!, _authData['password']!);
     }
-    Navigator.of(context)
-        .pushReplacement(MaterialPageRoute(builder: (_) => MainPage(userData: userData)));
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (_) => MainPage(),
+      ),
+    );
     setState(() {
       _isLoading = false;
     });

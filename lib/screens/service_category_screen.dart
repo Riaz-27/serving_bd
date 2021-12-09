@@ -234,7 +234,7 @@ class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Card(
-            elevation: 3,
+            // elevation: 3,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
@@ -253,7 +253,7 @@ class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
             ),
           ),
           Card(
-            elevation: 3,
+            // elevation: 3,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),

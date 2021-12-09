@@ -13,7 +13,7 @@ class OrdersProcessing extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              elevation: 4,
+              // elevation: 4,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Row(
@@ -22,7 +22,7 @@ class OrdersProcessing extends StatelessWidget {
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      children: const [
                         Text(
                           "AC Basic Service",
                           style: TextStyle(
@@ -63,7 +63,7 @@ class OrdersProcessing extends StatelessWidget {
                             ),
                             color: const Color(0xFF489D53),
                           ),
-                          child: Center(
+                          child: const Center(
                             child: Text(
                               "Assigned",
                               style: TextStyle(
@@ -74,10 +74,10 @@ class OrdersProcessing extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
-                        Text(
+                        const Text(
                           "৳  4,500",
                           style: TextStyle(
                             fontSize: 16,

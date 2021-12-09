@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
               toolbarHeight: 80,
               centerTitle: true,
             )),
-        home: auth.isAuth ? MainPage(userData: auth.userData) : AuthScreen(),
+        home: auth.isAuth ? MainPage() : AuthScreen(),
         routes: {
           ServicesScreen.routeName: (ctx) => const ServicesScreen(),
         },
@@ -54,8 +54,7 @@ class MyApp extends StatelessWidget {
 class MainPage extends StatefulWidget {
   int selectedItemIndex = 0;
   bool autoFocus;
-  Map<String,dynamic> userData;
-  MainPage({this.selectedItemIndex = 0, this.autoFocus = false, required this.userData});
+  MainPage({this.selectedItemIndex = 0, this.autoFocus = false,});
   @override
   _MainPageState createState() => _MainPageState();
 }
@@ -71,7 +70,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     final screens = [
-      HomeScreen(userData: widget.userData,),
+      HomeScreen(),
       SearchScreen(autoFocus: widget.autoFocus,),
       SearchScreen(),
       OrderScreen(),

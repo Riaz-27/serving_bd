@@ -27,6 +27,22 @@ class Auth with ChangeNotifier {
       return _userData;
   }
 
+  Future<void> updateUserData(Map<String, dynamic> userData) async {
+    final url = Uri.parse('https://serving-bd-2-default-rtdb.asia-southeast1.firebasedatabase.app/users/$_userId.json?auth=$_token');
+
+    await http.patch(
+        url,
+        body: json.encode({
+          'name': userData['name'],
+          'mobile': userData['mobile'],
+          'address': userData['address'],
+          'email': userData['email'],
+          'gender': userData['gender'],
+          'dob': userData['dob'],
+        }),
+      );
+  }
+
   Future<void> _authenticate(
       String email, String password, String urlSegment) async {
     var url = Uri.parse(
