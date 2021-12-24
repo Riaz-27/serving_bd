@@ -23,6 +23,10 @@ class Auth with ChangeNotifier {
     return null;
   }
 
+  String get userId{
+    return _userId!;
+  }
+
   Map<String,dynamic> get userData {
       return _userData;
   }
@@ -39,6 +43,7 @@ class Auth with ChangeNotifier {
           'email': userData['email'],
           'gender': userData['gender'],
           'dob': userData['dob'],
+          'profilePic': userData['profilePic'],
         }),
       );
   }
@@ -74,7 +79,7 @@ class Auth with ChangeNotifier {
         body: json.encode({
           'name': 'Not Set',
           'profilePic':
-              'https://firebasestorage.googleapis.com/v0/b/serving-bd-2.appspot.com/o/user_pics%2FBlank_Profile.png?alt=media&token=b911bc81-f3fd-4ea5-b128-6ba75302e79b',
+              'https://firebasestorage.googleapis.com/v0/b/serving-bd-2.appspot.com/o/user_pics%2FBlank_Profile.png?alt=media&token=c2e09f66-a4df-4a96-9858-94b04463a6ee',
           'accountType': 'customer',
           'mobile': 'Not Set',
           'address': 'Not Set',

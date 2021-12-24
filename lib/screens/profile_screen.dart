@@ -1,5 +1,10 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+
 import 'package:serving_bd/main.dart';
 import 'package:serving_bd/providers/auth.dart';
 
@@ -11,6 +16,40 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  File? _pickedImage;
+
+  void _pickImage() async {
+    showDialog<ImageSource>(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: const Text("Choose image source"),
+        actions: [
+          TextButton(
+            child: const Text("Camera"),
+            onPressed: () => Navigator.pop(context, ImageSource.camera),
+          ),
+          TextButton(
+            child: const Text("Gallery"),
+            onPressed: () => Navigator.pop(context, ImageSource.gallery),
+          ),
+        ],
+      ),
+    ).then((source) async {
+      if (source != null) {
+        final picker = ImagePicker();
+        final pickedImage = await picker.pickImage(
+          source: source,
+          imageQuality: 70,
+          maxWidth: 150,
+        );
+        final pickedImageFile = File(pickedImage!.path);
+        setState(() {
+          _pickedImage = pickedImageFile;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final GlobalKey<FormState> _formkey = GlobalKey();
@@ -18,6 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     var _isLoading = false;
 
     var userData = context.read<Auth>().userData;
+    var userId = context.read<Auth>().userId;
 
     Widget textFormField({
       required String userDataKey,
@@ -47,24 +87,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     Future<void> _submit() async {
-      if (!_formkey.currentState!.validate()) {
-        return;
+      try {
+        if (!_formkey.currentState!.validate()) {
+          return;
+        }
+        _formkey.currentState!.save();
+        setState(() {
+          _isLoading = true;
+        });
+
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('user_pics')
+            .child(userId + '.jpg');
+
+        await ref.putFile(_pickedImage!);
+        final imageUrl = await ref.getDownloadURL();
+        userData['profilePic'] = imageUrl;
+
+        await context.read<Auth>().updateUserData(userData);
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (_) => MainPage(),
+          ),
+        );
+        setState(() {
+          _isLoading = false;
+        });
+      } catch (_) {
+        return ;
       }
-      _formkey.currentState!.save();
-      setState(() {
-        _isLoading = true;
-      });
-
-      await context.read<Auth>().updateUserData(userData);
-
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => MainPage(),
-        ),
-      );
-      setState(() {
-        _isLoading = false;
-      });
     }
 
     return Scaffold(
@@ -75,47 +128,73 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onPressed: _submit,
             child: _isLoading
                 ? const CircularProgressIndicator()
-                : const Text("Save"),
+                : const Text("Save",
+                    style: TextStyle(color: Color(0xFFC61F62))),
           )
         ],
       ),
       body: SingleChildScrollView(
         child: Form(
           key: _formkey,
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              child: Column(
-                children: [
-                  textFormField(
-                      inputType: TextInputType.name,
-                      userDataKey: 'name',
-                      title: 'Name'),
-                  textFormField(
-                      inputType: TextInputType.number,
-                      userDataKey: 'mobile',
-                      title: 'Phone Number'),
-                  textFormField(
-                      inputType: TextInputType.name,
-                      userDataKey: 'email',
-                      title: 'E-mail'),
-                  textFormField(
-                      inputType: TextInputType.name,
-                      userDataKey: 'gender',
-                      title: 'Gender'),
-                  textFormField(
-                      inputType: TextInputType.name,
-                      userDataKey: 'dob',
-                      title: 'Date of Birth'),
-                  textFormField(
-                      inputType: TextInputType.name,
-                      userDataKey: 'address',
-                      title: 'Address'),
-                ],
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: CircleAvatar(
+                  radius: 40,
+                  backgroundColor: Colors.grey,
+                  backgroundImage: _pickedImage != null
+                      ? FileImage(_pickedImage!)
+                      : NetworkImage(userData['profilePic']) as ImageProvider,
+                ),
               ),
-            ),
+              TextButton.icon(
+                icon: const Icon(
+                  Icons.image,
+                  color: Color(0xFFC61F62),
+                ),
+                label: const Text(
+                  'Change Image',
+                  style: TextStyle(color: Color(0xFFC61F62)),
+                ),
+                onPressed: _pickImage,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Column(
+                    children: [
+                      textFormField(
+                          inputType: TextInputType.name,
+                          userDataKey: 'name',
+                          title: 'Name'),
+                      textFormField(
+                          inputType: TextInputType.number,
+                          userDataKey: 'mobile',
+                          title: 'Phone Number'),
+                      textFormField(
+                          inputType: TextInputType.name,
+                          userDataKey: 'email',
+                          title: 'E-mail'),
+                      textFormField(
+                          inputType: TextInputType.name,
+                          userDataKey: 'gender',
+                          title: 'Gender'),
+                      textFormField(
+                          inputType: TextInputType.name,
+                          userDataKey: 'dob',
+                          title: 'Date of Birth'),
+                      textFormField(
+                          inputType: TextInputType.name,
+                          userDataKey: 'address',
+                          title: 'Address'),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

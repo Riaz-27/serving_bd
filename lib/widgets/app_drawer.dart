@@ -74,6 +74,7 @@ class AppDrawer extends StatelessWidget {
               text: "Orders",
               index: 2,
             ),
+            Divider(),
             drawerList(
               ctx: context,
               icon: Icons.logout_outlined,

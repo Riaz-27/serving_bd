@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "577987816822",
+    "firebase_url": "https://serving-bd-2-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "serving-bd-2",
+    "storage_bucket": "serving-bd-2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:577987816822:android:097b718823f694b8ae1e57",
+        "android_client_info": {
+          "package_name": "com.example.serving_bd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "577987816822-n8h8dktechn2fljinn2aknt6lk4ik0pi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_m3FXhMkRXgRxMt0kNmfMkay_i4UUscQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "577987816822-n8h8dktechn2fljinn2aknt6lk4ik0pi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

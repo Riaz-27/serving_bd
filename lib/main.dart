@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:serving_bd/providers/auth.dart';
@@ -10,7 +11,11 @@ import './widgets/app_drawer.dart';
 import './screens/services_screens.dart';
 import './providers/services.dart';
 
-void main() {
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp();
+
   runApp(
     MultiProvider(
       providers: [
@@ -94,7 +99,7 @@ class _MainPageState extends State<MainPage> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                  fit: BoxFit.cover,
+                  fit: BoxFit.contain,
                   image: NetworkImage(
                     userData['profilePic'].toString(),
                   ),
