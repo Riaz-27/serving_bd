@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:serving_bd/providers/cart.dart';
 import 'package:serving_bd/providers/sub_category.dart';
+import 'package:serving_bd/screens/order_details_screen.dart';
 
 import '../providers/service.dart';
 import '../providers/services.dart';
@@ -22,14 +24,17 @@ class ServiceCategoryScreen extends StatefulWidget {
 
 class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
   int _quantity = 0;
-  double _total = 0;
 
   @override
   Widget build(BuildContext context) {
     //Fetching sub categories
     List<List<Service>> _services = context.read<Services>().services;
-    Service _selectedService = _services[widget.selectedCategoryIndex][widget.selectedServiceIndex];
+    Service _selectedService =
+        _services[widget.selectedCategoryIndex][widget.selectedServiceIndex];
     List<SubCategory> _subCategories = _selectedService.subCategory;
+
+    //Fetching cart items
+    Map<String, CartItem> items = context.read<Cart>().items;
 
     return Scaffold(
       appBar: AppBar(
@@ -40,6 +45,7 @@ class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
             maxWidth: 40,
           ),
           onPressed: () {
+            context.read<Cart>().clear();
             Navigator.of(context).pop();
           },
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
@@ -67,11 +73,17 @@ class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
               child: ListView.builder(
                 itemCount: _subCategories.length,
                 itemBuilder: (_, index) {
+                  String productId =
+                      '${widget.selectedCategoryIndex} + ${widget.selectedServiceIndex} + $index';
+                  int quantity =
+                      context.read<Cart>().getItemQuantity(productId);
                   return buildCatList(
-                    catName: _subCategories[index].title,
+                    productId: productId,
+                    serviceName: widget.title,
+                    subCatTitle: _subCategories[index].title,
                     price: _subCategories[index].price.toDouble(),
                     unit: _subCategories[index].unit,
-                    index: index,
+                    quantity: quantity,
                   );
                 },
               ),
@@ -83,10 +95,12 @@ class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
   }
 
   Widget buildCatList({
-    required String catName,
+    required String productId,
+    required String serviceName,
+    required String subCatTitle,
     required double price,
     required String unit,
-    required int index,
+    required int quantity,
   }) {
     return Card(
       shape: RoundedRectangleBorder(
@@ -105,7 +119,7 @@ class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
                 SizedBox(
                   width: 180,
                   child: Text(
-                    catName,
+                    subCatTitle,
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -118,12 +132,13 @@ class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
                 Text("৳ $price / $unit"),
               ],
             ),
-            _quantity < 1
+            quantity < 1
                 ? InkWell(
                     onTap: () {
                       setState(() {
+                        context.read<Cart>().addItem(productId, price,
+                            serviceName, subCatTitle, unit, quantity);
                         _quantity++;
-                        _total = _quantity * price;
                       });
                     },
                     child: Container(
@@ -162,10 +177,10 @@ class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
                         width: 30,
                         child: GestureDetector(
                           onTap: () {
-                            if (_quantity > 0) {
+                            if (quantity > 0) {
                               setState(() {
+                                context.read<Cart>().removeItem(productId);
                                 _quantity--;
-                                _total = _quantity * price;
                               });
                             }
                           },
@@ -186,7 +201,7 @@ class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
                         width: 50,
                         child: Center(
                           child: Text(
-                            "$_quantity $unit",
+                            "$quantity $unit",
                             style: const TextStyle(
                               fontSize: 14,
                             ),
@@ -206,8 +221,9 @@ class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
+                              context.read<Cart>().addItem(productId, price,
+                                  serviceName, subCatTitle, unit, quantity);
                               _quantity++;
-                              _total = _quantity * price;
                             });
                           },
                           child: const Icon(
@@ -243,7 +259,7 @@ class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
               width: (deviceSize.width / 2) - 10,
               child: Center(
                 child: Text(
-                  "Total ৳ $_total",
+                  "Total ৳ ${context.watch<Cart>().totalAmount}",
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -252,22 +268,31 @@ class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
               ),
             ),
           ),
-          Card(
-            // elevation: 3,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            color: const Color(0xFFC61F62),
-            child: SizedBox(
-              height: 40,
-              width: (deviceSize.width / 2) - 50,
-              child: const Center(
-                child: Text(
-                  "Proceed",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) {
+                  return OrderDetailsScreen();
+                }),
+              );
+            },
+            child: Card(
+              // elevation: 3,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              color: const Color(0xFFC61F62),
+              child: SizedBox(
+                height: 40,
+                width: (deviceSize.width / 2) - 50,
+                child: const Center(
+                  child: Text(
+                    "Proceed",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),

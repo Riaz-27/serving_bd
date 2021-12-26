@@ -12,8 +12,8 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
-  final color1 = Color.fromRGBO(198, 31, 98, 1);
-  final color2 = Color.fromRGBO(55, 54, 86, 1);
+  final color1 = const Color.fromRGBO(198, 31, 98, 1);
+  final color2 = const Color.fromRGBO(55, 54, 86, 1);
 
   int _selectedIndex = 0;
 
@@ -27,7 +27,7 @@ class _OrderScreenState extends State<OrderScreen> {
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

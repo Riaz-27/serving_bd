@@ -5,6 +5,8 @@ import 'package:serving_bd/providers/auth.dart';
 import 'package:serving_bd/screens/auth_screen.dart';
 import 'package:serving_bd/screens/profile_screen.dart';
 
+import '../main.dart';
+
 class AppDrawer extends StatelessWidget {
   Map<String, dynamic> userData;
 
@@ -64,22 +66,16 @@ class AppDrawer extends StatelessWidget {
             ),
             drawerList(
               ctx: context,
-              icon: Icons.settings_outlined,
-              text: "Settings",
-              index: 1,
-            ),
-            drawerList(
-              ctx: context,
               icon: Icons.shopping_cart_outlined,
               text: "Orders",
-              index: 2,
+              index: 1,
             ),
             Divider(),
             drawerList(
               ctx: context,
               icon: Icons.logout_outlined,
               text: "Logout",
-              index: 3,
+              index: 2,
             ),
           ],
         ),
@@ -110,7 +106,17 @@ class AppDrawer extends StatelessWidget {
                 ),
               );
               break;
-            case 3:
+            case 1:
+              Navigator.pushReplacement(
+                ctx,
+                MaterialPageRoute(
+                  builder: (_) => MainPage(
+                    selectedItemIndex: 3,
+                  ),
+                ),
+              );
+              break;
+            case 2:
               ctx.read<Auth>().logout();
               Navigator.of(ctx).pushReplacement(
                 MaterialPageRoute(
@@ -118,15 +124,6 @@ class AppDrawer extends StatelessWidget {
                 ),
               );
           }
-
-          // if (index == 3) {
-          //   ctx.read<Auth>().logout();
-          //   Navigator.of(ctx).pushReplacement(
-          //     MaterialPageRoute(
-          //       builder: (_) => const AuthScreen(),
-          //     ),
-          //   );
-          // }
         },
       ),
     );

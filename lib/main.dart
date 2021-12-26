@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:serving_bd/providers/auth.dart';
+import 'package:serving_bd/providers/cart.dart';
 import 'package:serving_bd/screens/auth_screen.dart';
 
 import './screens/home_screen.dart';
@@ -24,6 +25,9 @@ Future main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => Auth(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => Cart(),
         ),
       ],
       child: MyApp(),
@@ -57,7 +61,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MainPage extends StatefulWidget {
-  int selectedItemIndex = 0;
+  int selectedItemIndex;
   bool autoFocus;
   MainPage({this.selectedItemIndex = 0, this.autoFocus = false,});
   @override
