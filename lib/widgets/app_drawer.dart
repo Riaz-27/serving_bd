@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:serving_bd/providers/auth.dart';
+import 'package:serving_bd/providers/cart.dart';
 import 'package:serving_bd/screens/auth_screen.dart';
 import 'package:serving_bd/screens/profile_screen.dart';
 
@@ -118,6 +119,7 @@ class AppDrawer extends StatelessWidget {
               break;
             case 2:
               ctx.read<Auth>().logout();
+              ctx.read<Cart>().clear();
               Navigator.of(ctx).pushReplacement(
                 MaterialPageRoute(
                   builder: (_) => const AuthScreen(),

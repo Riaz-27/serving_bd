@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:serving_bd/providers/auth.dart';
 import 'package:serving_bd/providers/cart.dart';
+import 'package:serving_bd/providers/orders.dart';
 import 'package:serving_bd/screens/auth_screen.dart';
 
 import './screens/home_screen.dart';
@@ -28,6 +29,9 @@ Future main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => Cart(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => Orders(),
         ),
       ],
       child: MyApp(),
@@ -63,25 +67,27 @@ class MyApp extends StatelessWidget {
 class MainPage extends StatefulWidget {
   int selectedItemIndex;
   bool autoFocus;
-  MainPage({this.selectedItemIndex = 0, this.autoFocus = false,});
+  MainPage({
+    this.selectedItemIndex = 0,
+    this.autoFocus = false,
+  });
   @override
   _MainPageState createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
-  
   final appBarTitles = [
     "Home",
     "Search",
-    "Chats",
     "Orders",
   ];
   @override
   Widget build(BuildContext context) {
     final screens = [
       HomeScreen(),
-      SearchScreen(autoFocus: widget.autoFocus,),
-      SearchScreen(),
+      SearchScreen(
+        autoFocus: widget.autoFocus,
+      ),
       OrderScreen(),
     ];
 
@@ -119,15 +125,25 @@ class _MainPageState extends State<MainPage> {
           ),
         ],
       ),
-      drawer: AppDrawer(userData: userData,),
+      drawer: AppDrawer(
+        userData: userData,
+      ),
       body: screens[widget.selectedItemIndex],
       bottomNavigationBar: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Flexible(flex:1 , child: buildBottomNavBar(Icons.home_outlined, 0),),
-          Flexible(flex:1 , child: buildBottomNavBar(Icons.search, 1),),
-          Flexible(flex:1 , child: buildBottomNavBar(Icons.chat_outlined, 2),),
-          Flexible(flex:1 , child: buildBottomNavBar(Icons.shopping_cart_outlined, 3),),
+          Flexible(
+            flex: 1,
+            child: buildBottomNavBar(Icons.home_outlined, 0),
+          ),
+          Flexible(
+            flex: 1,
+            child: buildBottomNavBar(Icons.search, 1),
+          ),
+          Flexible(
+            flex: 1,
+            child: buildBottomNavBar(Icons.shopping_cart_outlined, 2),
+          ),
         ],
       ),
     );

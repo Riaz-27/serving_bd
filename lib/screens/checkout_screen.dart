@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:serving_bd/providers/auth.dart';
 import 'package:serving_bd/providers/cart.dart';
+import 'package:serving_bd/providers/orders.dart';
+import 'package:serving_bd/screens/payment_screen.dart';
 
 class CheckoutScreen extends StatelessWidget {
   final Map<String, dynamic> userData;
@@ -47,7 +50,7 @@ class CheckoutScreen extends StatelessWidget {
                   style: const TextStyle(fontSize: 14, color: Colors.grey),
                 ),
                 Text(
-                  ' ${price * quantity}',
+                  ' ৳ ${price * quantity}',
                   style: const TextStyle(
                     fontSize: 14,
                   ),
@@ -90,7 +93,24 @@ class CheckoutScreen extends StatelessWidget {
               ),
             ),
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (_) {
+                    final userId = context.read<Auth>().userId;
+                    final authToken = context.read<Auth>().token;
+                    final totalAmount = context.read<Cart>().totalAmount;
+                    context.read<Orders>().addOrder(
+                          authToken: authToken!,
+                          customerDetails: userData,
+                          dateTime: dateTime,
+                          items: _items,
+                          totalAmount: totalAmount,
+                          userId: userId,
+                        );
+                    return PaymentScreen();
+                  }),
+                );
+              },
               child: Card(
                 // elevation: 3,
                 shape: RoundedRectangleBorder(
@@ -343,7 +363,7 @@ class CheckoutScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text("Amount to be paid"),
-                            Text('${context.read<Cart>().totalAmount}')
+                            Text('৳ ${context.read<Cart>().totalAmount}')
                           ],
                         ),
                       ],
