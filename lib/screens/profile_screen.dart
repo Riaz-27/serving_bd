@@ -54,8 +54,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final GlobalKey<FormState> _formkey = GlobalKey();
 
-    var _isLoading = false;
-
     var userData = context.read<Auth>().userData;
     var userId = context.read<Auth>().userId;
 
@@ -66,7 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }) {
       return TextFormField(
         decoration: InputDecoration(
-          label: Text(title),
+          labelText: title,
           border: InputBorder.none,
           fillColor: const Color(0xFFC61F62),
           isDense: true,
@@ -91,20 +89,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
         if (!_formkey.currentState!.validate()) {
           return;
         }
+
         _formkey.currentState!.save();
-        setState(() {
-          _isLoading = true;
-        });
+        if (_pickedImage != null) {
+          final ref = FirebaseStorage.instance
+              .ref()
+              .child('user_pics')
+              .child(userId + '.jpg');
 
-        final ref = FirebaseStorage.instance
-            .ref()
-            .child('user_pics')
-            .child(userId + '.jpg');
-
-        await ref.putFile(_pickedImage!);
-        final imageUrl = await ref.getDownloadURL();
-        userData['profilePic'] = imageUrl;
-
+          await ref.putFile(_pickedImage!);
+          final imageUrl = await ref.getDownloadURL();
+          userData['profilePic'] = imageUrl;
+        }
         await context.read<Auth>().updateUserData(userData);
 
         Navigator.of(context).pushReplacement(
@@ -112,11 +108,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             builder: (_) => MainPage(),
           ),
         );
-        setState(() {
-          _isLoading = false;
-        });
       } catch (_) {
-        return ;
+        return print(_);
       }
     }
 
@@ -126,10 +119,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           TextButton(
             onPressed: _submit,
-            child: _isLoading
-                ? const CircularProgressIndicator()
-                : const Text("Save",
-                    style: TextStyle(color: Color(0xFFC61F62))),
+            child: const Text(
+              "Save",
+              style: TextStyle(
+                color: Color(0xFFC61F62),
+              ),
+            ),
           )
         ],
       ),
