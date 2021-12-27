@@ -32,6 +32,7 @@ class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
     Service _selectedService =
         _services[widget.selectedCategoryIndex][widget.selectedServiceIndex];
     List<SubCategory> _subCategories = _selectedService.subCategory;
+    List<String> _categories = context.read<Services>().categories;
 
     //Fetching cart items
     Map<String, CartItem> items = context.read<Cart>().items;
@@ -78,6 +79,7 @@ class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
                   int quantity =
                       context.read<Cart>().getItemQuantity(productId);
                   return buildCatList(
+                    serviceType: _categories[widget.selectedCategoryIndex],
                     productId: productId,
                     serviceName: widget.title,
                     subCatTitle: _subCategories[index].title,
@@ -97,6 +99,7 @@ class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
   Widget buildCatList({
     required String productId,
     required String serviceName,
+    required String serviceType,
     required String subCatTitle,
     required double price,
     required String unit,
@@ -136,8 +139,15 @@ class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
                 ? InkWell(
                     onTap: () {
                       setState(() {
-                        context.read<Cart>().addItem(productId, price,
-                            serviceName, subCatTitle, unit, quantity);
+                        context.read<Cart>().addItem(
+                              productId: productId,
+                              price: price,
+                              serviceName:serviceName,
+                              subCatTitle:subCatTitle,
+                              unit:unit,
+                              quantity:quantity,
+                              serviceType:serviceType,
+                            );
                         _quantity++;
                       });
                     },
@@ -221,8 +231,13 @@ class _ServiceCategoryScreenState extends State<ServiceCategoryScreen> {
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
-                              context.read<Cart>().addItem(productId, price,
-                                  serviceName, subCatTitle, unit, quantity);
+                              context.read<Cart>().addItem(productId: productId,
+                              price: price,
+                              serviceName:serviceName,
+                              subCatTitle:subCatTitle,
+                              unit:unit,
+                              quantity:quantity,
+                              serviceType:serviceType,);
                               _quantity++;
                             });
                           },

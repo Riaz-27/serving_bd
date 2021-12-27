@@ -6,6 +6,7 @@ class CartItem {
   final double price;
   final int quantity;
   final String unit;
+  final String serviceType;
 
   CartItem({
     required this.serviceName,
@@ -13,6 +14,7 @@ class CartItem {
     required this.price,
     required this.quantity,
     required this.unit,
+    required this.serviceType,
   });
 }
 
@@ -38,13 +40,15 @@ class Cart with ChangeNotifier {
     return _items[productId]!.quantity;
   }
 
-  void addItem(
-    String productId,
-    double price,
-    String serviceName,
-    String subCatTitle,
-    String unit,
-    int quantity,
+  void addItem({
+    required String productId,
+    required double price,
+    required String serviceName,
+    required String serviceType,
+    required String subCatTitle,
+    required String unit,
+    required int quantity,
+  }
   ) {
     if (_items.containsKey(productId)) {
       _items.update(
@@ -54,6 +58,7 @@ class Cart with ChangeNotifier {
           subCatTitle: currentItem.subCatTitle,
           unit: currentItem.unit,
           price: currentItem.price,
+          serviceType: currentItem.serviceType,
           quantity: currentItem.quantity + 1,
         ),
       );
@@ -61,6 +66,7 @@ class Cart with ChangeNotifier {
       _items.putIfAbsent(
         productId,
         () => CartItem(
+          serviceType: serviceType,
           serviceName: serviceName,
           subCatTitle: subCatTitle,
           unit: unit,
@@ -81,6 +87,7 @@ class Cart with ChangeNotifier {
         productId,
         (currentItem) => CartItem(
           serviceName: currentItem.serviceName,
+          serviceType: currentItem.serviceType,
           subCatTitle: currentItem.subCatTitle,
           unit: currentItem.unit,
           price: currentItem.price,

@@ -5,17 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-import 'package:serving_bd/main.dart';
 import 'package:serving_bd/providers/auth.dart';
+import 'package:serving_bd/screens/service_provider/service_provider_screen.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+class ProviderProfileScreen extends StatefulWidget {
+  const ProviderProfileScreen({Key? key}) : super(key: key);
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  _ProviderProfileScreenState createState() => _ProviderProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
   File? _pickedImage;
 
   void _pickImage() async {
@@ -61,6 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       required String userDataKey,
       required TextInputType inputType,
       required String title,
+      bool readOnly = false,
     }) {
       return TextFormField(
         decoration: InputDecoration(
@@ -71,6 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           contentPadding: const EdgeInsets.all(15),
         ),
         keyboardType: inputType,
+        readOnly: readOnly,
         initialValue: userData[userDataKey],
         validator: (val) {
           if (val == null || val.isEmpty) {
@@ -101,11 +103,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           final imageUrl = await ref.getDownloadURL();
           userData['profilePic'] = imageUrl;
         }
-        await context.read<Auth>().updateUserData(userData,0);
+        await context.read<Auth>().updateUserData(userData, 1);
 
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (_) => MainPage(),
+            builder: (_) => ServiceProviderScreen(),
           ),
         );
       } catch (_) {
@@ -162,29 +164,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                     children: [
                       textFormField(
-                          inputType: TextInputType.name,
-                          userDataKey: 'name',
-                          title: 'Name'),
+                        inputType: TextInputType.name,
+                        userDataKey: 'name',
+                        title: 'Name',
+                      ),
                       textFormField(
-                          inputType: TextInputType.number,
-                          userDataKey: 'mobile',
-                          title: 'Phone Number'),
+                        inputType: TextInputType.number,
+                        userDataKey: 'mobile',
+                        title: 'Phone Number',
+                      ),
                       textFormField(
-                          inputType: TextInputType.name,
-                          userDataKey: 'email',
-                          title: 'E-mail'),
+                        inputType: TextInputType.name,
+                        userDataKey: 'email',
+                        title: 'E-mail',
+                        readOnly: true,
+                      ),
                       textFormField(
-                          inputType: TextInputType.name,
-                          userDataKey: 'gender',
-                          title: 'Gender'),
+                        inputType: TextInputType.name,
+                        userDataKey: 'address',
+                        title: 'Address',
+                      ),
                       textFormField(
-                          inputType: TextInputType.name,
-                          userDataKey: 'dob',
-                          title: 'Date of Birth'),
+                        inputType: TextInputType.name,
+                        userDataKey: 'gender',
+                        title: 'Gender',
+                      ),
                       textFormField(
-                          inputType: TextInputType.name,
-                          userDataKey: 'address',
-                          title: 'Address'),
+                        inputType: TextInputType.name,
+                        userDataKey: 'dob',
+                        title: 'Date of Birth',
+                      ),
+                      textFormField(
+                        inputType: TextInputType.name,
+                        userDataKey: 'NID',
+                        title: 'NID Number',
+                      ),
+                      textFormField(
+                        inputType: TextInputType.name,
+                        userDataKey: 'drivingLicense',
+                        title: 'Driving License (if required)',
+                      ),
+                      textFormField(
+                        inputType: TextInputType.name,
+                        userDataKey: 'experience',
+                        title: 'Work Experience',
+                      ),
+                      textFormField(
+                        inputType: TextInputType.name,
+                        userDataKey: 'serviceType',
+                        title: 'Service Type You Provide',
+                      ),
                     ],
                   ),
                 ),

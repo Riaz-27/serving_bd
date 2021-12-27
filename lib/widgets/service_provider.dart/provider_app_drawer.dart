@@ -2,17 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:serving_bd/providers/auth.dart';
-import 'package:serving_bd/providers/cart.dart';
-import 'package:serving_bd/screens/auth_screen.dart';
-import 'package:serving_bd/screens/profile_screen.dart';
 import 'package:serving_bd/screens/selection_screen.dart';
+import 'package:serving_bd/screens/service_provider/provider_profile_screen.dart';
+import 'package:serving_bd/screens/service_provider/service_provider_screen.dart';
 
-import '../main.dart';
-
-class AppDrawer extends StatelessWidget {
-  Map<String, dynamic> userData;
-
-  AppDrawer({Key? key, required this.userData}) : super(key: key);
+class ProviderAppDrawer extends StatelessWidget {
+  final Map<String, dynamic> userData;
+  const ProviderAppDrawer({ Key? key, required this.userData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -62,22 +58,28 @@ class AppDrawer extends StatelessWidget {
             ),
             drawerList(
               ctx: context,
+              icon: Icons.home,
+              text: "Home",
+              index: 0,
+            ),
+            drawerList(
+              ctx: context,
               icon: Icons.people_alt_outlined,
               text: "Profile",
-              index: 0,
+              index: 1,
             ),
             drawerList(
               ctx: context,
               icon: Icons.shopping_cart_outlined,
               text: "Orders",
-              index: 1,
+              index: 2,
             ),
             const Divider(),
             drawerList(
               ctx: context,
               icon: Icons.logout_outlined,
               text: "Logout",
-              index: 2,
+              index: 3,
             ),
           ],
         ),
@@ -101,26 +103,30 @@ class AppDrawer extends StatelessWidget {
         title: Text(text),
         onTap: () {
           switch (index) {
-            case 0:
-              Navigator.of(ctx).push(
+            case 0 :
+              Navigator.of(ctx).pushReplacement(
                 MaterialPageRoute(
-                  builder: (_) => const ProfileScreen(),
+                  builder: (_) => const ServiceProviderScreen(),
                 ),
               );
-              break;
+            break;
             case 1:
-              Navigator.pushReplacement(
-                ctx,
+              Navigator.of(ctx).push(
                 MaterialPageRoute(
-                  builder: (_) => MainPage(
-                    selectedItemIndex: 2,
-                  ),
+                  builder: (_) => const ProviderProfileScreen(),
                 ),
               );
               break;
             case 2:
+              Navigator.pushReplacement(
+                ctx,
+                MaterialPageRoute(
+                  builder: (_) => const ServiceProviderScreen(),
+                ),
+              );
+              break;
+            case 3:
               ctx.read<Auth>().logout();
-              ctx.read<Cart>().clear();
               Navigator.of(ctx).pushReplacement(
                 MaterialPageRoute(
                   builder: (_) => const SelectionScreen(),

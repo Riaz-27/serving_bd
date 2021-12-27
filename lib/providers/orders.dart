@@ -7,15 +7,77 @@ import 'package:serving_bd/providers/cart.dart';
 
 class Orders with ChangeNotifier {
   List<Map<String, dynamic>> _orders = [];
+  List<Map<String, dynamic>> _allOrders = [];
 
   String _orderId = '';
 
-  List<Map<String, dynamic>>  get orders {
+  List<Map<String, dynamic>> get orders {
     return [..._orders];
+  }
+
+  List<Map<String, dynamic>> get allOrders {
+    return [..._allOrders];
   }
 
   String get orderId {
     return _orderId;
+  }
+
+  Future<void> fetchAllOrders(String authToken) async {
+    try {
+      var url = Uri.parse(
+          'https://serving-bd-2-default-rtdb.asia-southeast1.firebasedatabase.app/orders.json?auth=$authToken');
+      final response = await http.get(url);
+
+      final List<Map<String, dynamic>> loadedOrders = [];
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      extractedData.forEach(
+        (userID, orders) {
+          (orders as Map<String, dynamic>).forEach(
+            (orderId, orderData) {
+              loadedOrders.add(
+                {
+                  'customerName': orderData['customerName'],
+                  'customerMobile': orderData['customerMobile'],
+                  'dateTime': DateTime.parse(orderData['dateTime']),
+                  'services': (orderData['services'] as List<dynamic>)
+                      .map(
+                        (item) => {
+                          'serviceName': item['serviceName'],
+                          'subCatTitle': item['subCatTitle'],
+                          'price': item['price'],
+                          'quantity': item['quantity'],
+                          'unit': item['unit'],
+                        },
+                      )
+                      .toList(),
+                  'totalAmount': orderData['totalAmount'],
+                  'totalToPay': orderData['totalToPay'],
+                  'providerName': orderData['providerName'],
+                  'providerMobile': orderData['providerMobile'],
+                  'providerImg': orderData['providerImg'],
+                  'orderStatus': orderData['orderStatus'],
+                  'paymentStatus': orderData['paymentStatus'],
+                  'paymentType': orderData['paymentType'],
+                  'paymentRef': orderData['paymentRef'],
+                  'paymentTxid': orderData['paymentTxid'],
+                  'orderType': orderData['orderType'],
+                  'orderDateTime': orderData['orderDateTime'],
+                  'completeDateTime': orderData['completeDateTime'],
+                  'providerUserId': orderData['providerUserId'],
+                },
+              );
+            },
+          );
+        },
+      );
+      _allOrders = loadedOrders;
+      print(_allOrders.length);
+      notifyListeners();
+    } catch (e) {
+      print(e);
+      return;
+    }
   }
 
   Future<void> fetchAndSetOrders(String userId, String authToken) async {
@@ -32,15 +94,17 @@ class Orders with ChangeNotifier {
               'customerName': orderData['customerName'],
               'customerMobile': orderData['customerMobile'],
               'dateTime': DateTime.parse(orderData['dateTime']),
-              'services': (orderData['services'] as List<dynamic>).map(
-                (item) => {
-                  'serviceName': item['serviceName'],
-                  'subCatTitle': item['subCatTitle'],
-                  'price': item['price'],
-                  'quantity': item['quantity'],
-                  'unit': item['unit'],
-                },
-              ).toList(),
+              'services': (orderData['services'] as List<dynamic>)
+                  .map(
+                    (item) => {
+                      'serviceName': item['serviceName'],
+                      'subCatTitle': item['subCatTitle'],
+                      'price': item['price'],
+                      'quantity': item['quantity'],
+                      'unit': item['unit'],
+                    },
+                  )
+                  .toList(),
               'totalAmount': orderData['totalAmount'],
               'totalToPay': orderData['totalToPay'],
               'providerName': orderData['providerName'],
@@ -51,6 +115,10 @@ class Orders with ChangeNotifier {
               'paymentType': orderData['paymentType'],
               'paymentRef': orderData['paymentRef'],
               'paymentTxid': orderData['paymentTxid'],
+              'orderType': orderData['orderType'],
+              'orderDateTime': orderData['orderDateTime'],
+              'completeDateTime': orderData['completeDateTime'],
+              'providerUserId': orderData['providerUserId'],
             },
           );
         },
@@ -72,8 +140,10 @@ class Orders with ChangeNotifier {
     required double totalAmount,
   }) async {
     List<CartItem> extractedItems = [];
+    String orderType = '';
     items.forEach((prodId, item) {
       extractedItems.add(item);
+      orderType = item.serviceType;
     });
 
     var url = Uri.parse(
@@ -104,6 +174,10 @@ class Orders with ChangeNotifier {
           'paymentType': 'pay with cash',
           'paymentRef': 'NA',
           'paymentTxid': 'NA',
+          'orderType': orderType,
+          'orderDateTime': DateTime.now().toIso8601String(),
+          'completeDateTime': 'NA',
+          'providerUserId': 'NA',
         },
       ),
     );
@@ -111,7 +185,8 @@ class Orders with ChangeNotifier {
     _orderId = orderId.toString();
     url = Uri.parse(
         'https://serving-bd-2-default-rtdb.asia-southeast1.firebasedatabase.app/orders/$userId/$orderId.json?auth=$authToken');
-    await http.patch(url, body: json.encode({'paymentRef': orderId.toString()}));
+    await http.patch(url,
+        body: json.encode({'paymentRef': orderId.toString()}));
 
     notifyListeners();
   }
@@ -156,6 +231,7 @@ class Orders with ChangeNotifier {
           'providerName': providerDetails['name'],
           'providerMobile': providerDetails['mobile'],
           'providerImg': providerDetails['profilePic'],
+          'providerUserId': providerDetails['providerUserId'],
           'orderStatus': orderStatus,
         },
       ),

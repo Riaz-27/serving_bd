@@ -5,6 +5,7 @@ import 'package:serving_bd/providers/auth.dart';
 import 'package:serving_bd/providers/cart.dart';
 import 'package:serving_bd/providers/orders.dart';
 import 'package:serving_bd/screens/auth_screen.dart';
+import 'package:serving_bd/screens/selection_screen.dart';
 
 import './screens/home_screen.dart';
 import './screens/search_screen.dart';
@@ -55,7 +56,7 @@ class MyApp extends StatelessWidget {
               toolbarHeight: 80,
               centerTitle: true,
             )),
-        home: auth.isAuth ? MainPage() : AuthScreen(),
+        home: SelectionScreen(),
         routes: {
           ServicesScreen.routeName: (ctx) => const ServicesScreen(),
         },

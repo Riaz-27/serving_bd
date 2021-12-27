@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:serving_bd/providers/auth.dart';
+import 'package:serving_bd/screens/selection_screen.dart';
+import 'package:serving_bd/screens/service_provider/service_provider_screen.dart';
 
 import '../main.dart';
 
 class AuthScreen extends StatefulWidget {
-  const AuthScreen({Key? key}) : super(key: key);
+  final int userType;
+  const AuthScreen({Key? key, required this.userType}) : super(key: key);
 
   @override
   State<AuthScreen> createState() => _AuthScreenState();
@@ -17,7 +20,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final GlobalKey<FormState> _formkey = GlobalKey();
   AuthMode _authMode = AuthMode.Login;
   var _isLoading = false;
-  Map<String, String> _authData = {
+  final Map<String, String> _authData = {
     'email': '',
     'password': '',
   };
@@ -35,15 +38,42 @@ class _AuthScreenState extends State<AuthScreen> {
     if (_authMode == AuthMode.Login) {
       await context
           .read<Auth>()
-          .login(_authData['email']!, _authData['password']!);
+          .login(_authData['email']!, _authData['password']!, widget.userType);
     } else {
       await context
           .read<Auth>()
-          .signup(_authData['email']!, _authData['password']!);
+          .signup(_authData['email']!, _authData['password']!, widget.userType);
     }
+
+    final userData = context.read<Auth>().userData;
+
+    if (userData['name'] == 0) {
+      List<String> alertText = [
+        'This Email is already in use as - Service Provider.Please switch mode and try again.',
+        'This Email is already in use as - Customer.Please switch mode and try again.'
+      ];
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          content: Text(
+            alertText[widget.userType],
+            style: TextStyle(fontSize: 14),
+          ),
+          actions: [
+            TextButton(
+              child: const Text("Close"),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+    
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (_) => MainPage(),
+        builder: (_) =>
+            widget.userType == 1 ? const ServiceProviderScreen() : MainPage(),
       ),
     );
     setState(() {
@@ -211,6 +241,22 @@ class _AuthScreenState extends State<AuthScreen> {
                                   ? 'Create Account'
                                   : 'LOGIN',
                               style: const TextStyle(
+                                color: Color(0xFFC61F62),
+                              ),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(builder: (_) {
+                              return const SelectionScreen();
+                            }));
+                          },
+                          child: const Center(
+                            child: Text(
+                              'Change Selection',
+                              style: TextStyle(
                                 color: Color(0xFFC61F62),
                               ),
                             ),
