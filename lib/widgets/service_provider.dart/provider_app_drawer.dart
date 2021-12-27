@@ -73,7 +73,7 @@ class ProviderAppDrawer extends StatelessWidget {
               ctx: context,
               icon: Icons.logout_outlined,
               text: "Logout",
-              index: 3,
+              index: 2,
             ),
           ],
         ),

@@ -16,7 +16,7 @@ class OrderListScreen extends StatefulWidget {
     this.orders,
     this.title,
     this.available = true,
-    this.isComplete = false,
+    this.isComplete = true,
   }) : super(key: key);
 
   @override

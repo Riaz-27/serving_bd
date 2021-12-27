@@ -246,6 +246,9 @@ class _AuthScreenState extends State<AuthScreen> {
                             ),
                           ),
                         ),
+                        const SizedBox(
+                          height: 20,
+                        ),
                         GestureDetector(
                           onTap: () {
                             Navigator.of(context).pushReplacement(
