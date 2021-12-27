@@ -1,7 +1,11 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:serving_bd/providers/auth.dart';
 import 'package:serving_bd/providers/orders.dart';
+import 'package:serving_bd/screens/service_provider/order_list_screen.dart';
 import 'package:serving_bd/widgets/service_provider.dart/provider_app_drawer.dart';
 
 class ServiceProviderScreen extends StatefulWidget {
@@ -14,25 +18,48 @@ class ServiceProviderScreen extends StatefulWidget {
 class _ServiceProviderScreenState extends State<ServiceProviderScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  List<Map<String, dynamic>>? allOrders;
-  List<Map<String, dynamic>>? currentOrder;
-  List<Map<String, dynamic>>? availableOrders;
-  List<Map<String, dynamic>>? completeOrders;
-
+  List<Map<String, dynamic>> _allOrders = [];
+  List<Map<String, dynamic>> _currentOrder = [];
+  List<Map<String, dynamic>> _availableOrders = [];
+  List<Map<String, dynamic>> _completeOrders = [];
+  var userData;
+  var token;
 
   var _isLoading = true;
 
   @override
   void initState() {
-    var token = context.read<Auth>().token;
     _isLoading = true;
+    token = context.read<Auth>().token;
     context.read<Orders>().fetchAllOrders(token!).then((_) {
-      allOrders = context.read<Orders>().allOrders;
-      currentOrder = allOrders;
-      availableOrders = allOrders;
-      completeOrders = allOrders;
+      userData = context.read<Auth>().userData;
+      _allOrders = context.read<Orders>().allOrders;
+      // _currentOrder = _allOrders;
+      // _availableOrders = _allOrders;
+      // _completeOrders = _allOrders;
 
-      currentOrder!.removeWhere((order) => order['']);
+      for (var item in _allOrders) {
+        String providerUserId = item['providerUserId'];
+        String status = item['orderStatus'];
+
+        if (providerUserId == userData['userId'] && !(status == 'Completed')) {
+          print('Found current');
+          _currentOrder.add(item);
+        }
+
+        String orderType = item['orderType'];
+        String serviceType = userData['serviceType'];
+        if (providerUserId == 'NA' && orderType == serviceType) {
+          print('Found available');
+          _availableOrders.add(item);
+        }
+
+        if (providerUserId == userData['userId'] && status == 'Completed') {
+          print('Found complete');
+          _completeOrders.add(item);
+        }
+      }
+
       setState(() {
         _isLoading = false;
       });
@@ -42,15 +69,204 @@ class _ServiceProviderScreenState extends State<ServiceProviderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userData = context.read<Auth>().userData;
-
     var deviceWidth = MediaQuery.of(context).size.width;
+    var dateTime = DateTime.now();
+
+    Widget _buildOrdersList({
+      required int index,
+      required List<dynamic> orders,
+    }) {
+      if (orders.length == 0) {
+        return Card(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Text(
+                  "No Current Job",
+                  softWrap: true,
+                  style: TextStyle(fontSize: 16, color: Colors.red.shade400),
+                ),
+                SizedBox(height: 10,),
+                Text(
+                  "Not Currently Working. Take an available job to continue!",
+                  softWrap: true,
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+
+      dateTime = DateTime.parse(orders[index]['dateTime'].toString());
+
+      return Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    orders[index]['services'][0]['serviceName'],
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  SizedBox(
+                    height: 40,
+                    width: 200,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount:
+                                (orders[index]['services'] as List<dynamic>)
+                                    .length,
+                            itemBuilder: (_, ind) {
+                              return Text(
+                                ' ' +
+                                    orders[index]['services'][ind]
+                                        ['subCatTitle'],
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                                softWrap: false,
+                                overflow: TextOverflow.visible,
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    DateFormat('dd, MMM yyyy · hh:mm a')
+                        .format(dateTime)
+                        .toString(),
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.green,
+                    ),
+                  ),
+                  Text(
+                    orders[index]['paymentType'].toString(),
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.red,
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    decoration: ShapeDecoration(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      color: const Color(0xFF489D53),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Center(
+                        child: Text(
+                          orders[index]['orderStatus'],
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "৳  ${orders[index]['totalAmount']}",
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      context
+                          .read<Orders>()
+                          .completeOrder(order: orders[index], authToken: token)
+                          .then(
+                            (_) => context
+                                .read<Auth>()
+                                .updateEarning(orders[index]['totalAmount'])
+                                .then(
+                                  (__) => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) {
+                                        return ServiceProviderScreen();
+                                      },
+                                    ),
+                                  ),
+                                ),
+                          );
+                    },
+                    child: Container(
+                      decoration: ShapeDecoration(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        color: const Color(0xFF489D53),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.all(5),
+                        child: Center(
+                          child: Text(
+                            'Mark Complete',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      );
+    }
+
     return _isLoading
-        ? Scaffold(
-          body: Center(
+        ? const Scaffold(
+            body: Center(
               child: CircularProgressIndicator(),
             ),
-        )
+          )
         : Scaffold(
             key: _scaffoldKey,
             appBar: AppBar(
@@ -107,8 +323,8 @@ class _ServiceProviderScreenState extends State<ServiceProviderScreen> {
                             child: Padding(
                               padding: const EdgeInsets.only(top: 10),
                               child: Column(
-                                children: const [
-                                  Padding(
+                                children: [
+                                  const Padding(
                                     padding: EdgeInsets.all(8.0),
                                     child: Text(
                                       "Orders Served",
@@ -119,12 +335,12 @@ class _ServiceProviderScreenState extends State<ServiceProviderScreen> {
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Text(
-                                    "৳  4,500",
-                                    style: TextStyle(
+                                    _completeOrders.length.toString(),
+                                    style: const TextStyle(
                                       fontSize: 14,
                                     ),
                                   ),
@@ -159,7 +375,7 @@ class _ServiceProviderScreenState extends State<ServiceProviderScreen> {
                                     height: 10,
                                   ),
                                   Text(
-                                    "৳ ${userData['totalEarning']}",
+                                    "৳ ${userData['totalEarning'].toString()}",
                                     style: const TextStyle(
                                       fontSize: 14,
                                     ),
@@ -177,7 +393,7 @@ class _ServiceProviderScreenState extends State<ServiceProviderScreen> {
                     const Padding(
                       padding: EdgeInsets.all(10),
                       child: Text(
-                        "Job Status",
+                        "Order Status",
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w900,
@@ -187,9 +403,53 @@ class _ServiceProviderScreenState extends State<ServiceProviderScreen> {
                     const SizedBox(
                       height: 10,
                     ),
-                    buildTitle(title: 'Current Jobs'),
-                    buildTitle(title: 'Available Jobs'),
-                    buildTitle(title: 'Completed Jobs'),
+                    _buildOrdersList(index: 0, orders: _currentOrder),
+                    SizedBox(
+                      height: 130,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) {
+                                        return OrderListScreen(
+                                          title: 'Avaiable Orders',
+                                          orders: _availableOrders,
+                                          available: _currentOrder.length > 0
+                                              ? false
+                                              : true,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                                child: buildTitle(title: 'Available Orders', count: _availableOrders.length)),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) {
+                                        return OrderListScreen(
+                                          title: 'Completed Orders',
+                                          orders: _completeOrders,
+                                          isComplete: false,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                                child: buildTitle(title: 'Completed Orders', count: _completeOrders.length)),
+                          ),
+                        ],
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -199,6 +459,7 @@ class _ServiceProviderScreenState extends State<ServiceProviderScreen> {
 
   Widget buildTitle({
     required title,
+    required count,
   }) {
     return Card(
       shape: RoundedRectangleBorder(
@@ -211,10 +472,11 @@ class _ServiceProviderScreenState extends State<ServiceProviderScreen> {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   title,
@@ -223,36 +485,16 @@ class _ServiceProviderScreenState extends State<ServiceProviderScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(
-                  height: 10,
+                SizedBox(height: 10,),
+                Text(
+                  count.toString(),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
-                    "Details",
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Icon(
-                    Icons.chevron_right_rounded,
-                    size: 30,
-                    color: Color(0xFFC61F62),
-                  ),
-                ],
-              ),
-            )
           ],
         ),
       ),

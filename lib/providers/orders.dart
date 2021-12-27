@@ -65,6 +65,7 @@ class Orders with ChangeNotifier {
                   'orderDateTime': orderData['orderDateTime'],
                   'completeDateTime': orderData['completeDateTime'],
                   'providerUserId': orderData['providerUserId'],
+                  'customerUserId': orderData['customerUserId'],
                 },
               );
             },
@@ -72,7 +73,6 @@ class Orders with ChangeNotifier {
         },
       );
       _allOrders = loadedOrders;
-      print(_allOrders.length);
       notifyListeners();
     } catch (e) {
       print(e);
@@ -119,6 +119,7 @@ class Orders with ChangeNotifier {
               'orderDateTime': orderData['orderDateTime'],
               'completeDateTime': orderData['completeDateTime'],
               'providerUserId': orderData['providerUserId'],
+              'customerUserId': orderData['customerUserId'],
             },
           );
         },
@@ -178,6 +179,7 @@ class Orders with ChangeNotifier {
           'orderDateTime': DateTime.now().toIso8601String(),
           'completeDateTime': 'NA',
           'providerUserId': 'NA',
+          'customerUserId': customerDetails['userId'],
         },
       ),
     );
@@ -217,22 +219,40 @@ class Orders with ChangeNotifier {
 
   Future<void> updateProvider({
     required Map<String, dynamic> providerDetails,
-    required String userId,
     required String authToken,
-    required String orderId,
-    required String orderStatus,
+    required Map<String, dynamic> order,
   }) async {
     final url = Uri.parse(
-        'https://serving-bd-2-default-rtdb.asia-southeast1.firebasedatabase.app/orders/$userId/$orderId.json?auth=$authToken');
+        'https://serving-bd-2-default-rtdb.asia-southeast1.firebasedatabase.app/orders/${order["customerUserId"]}/${order["paymentRef"]}.json?auth=$authToken');
     await http.patch(
       url,
       body: json.encode(
         {
+          'orderStatus': 'On Going',
           'providerName': providerDetails['name'],
           'providerMobile': providerDetails['mobile'],
           'providerImg': providerDetails['profilePic'],
-          'providerUserId': providerDetails['providerUserId'],
-          'orderStatus': orderStatus,
+          'providerUserId': providerDetails['userId'],
+        },
+      ),
+    );
+    notifyListeners();
+  }
+
+  Future<void> completeOrder({
+    required Map<String, dynamic> order,
+    required String authToken,
+  }) async {
+    final url = Uri.parse(
+        'https://serving-bd-2-default-rtdb.asia-southeast1.firebasedatabase.app/orders/${order["customerUserId"]}/${order["paymentRef"]}.json?auth=$authToken');
+    await http.patch(
+      url,
+      body: json.encode(
+        {
+          'orderStatus': 'Completed',
+          'completeDateTime': DateTime.now().toIso8601String(),
+          "totalToPay" : 0,
+          "paymentStatus" : "done",
         },
       ),
     );

@@ -76,6 +76,20 @@ class Auth with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateEarning(double amount) async {
+    var url = Uri.parse(
+        'https://serving-bd-2-default-rtdb.asia-southeast1.firebasedatabase.app/${_userTypes[1]}/$_userId.json?auth=$_token');
+
+    await http.patch(
+      url,
+      body: json.encode(
+        {
+          'totalEarning': amount,
+        },
+      ),
+    );
+  }
+
   Future<void> _authenticate(
       String email, String password, String urlSegment, int userType) async {
     var url = Uri.parse(
@@ -148,7 +162,7 @@ class Auth with ChangeNotifier {
         'https://serving-bd-2-default-rtdb.asia-southeast1.firebasedatabase.app/${_userTypes[userType]}/$_userId.json?auth=$_token');
     response = await http.get(url);
     _userData = json.decode(response.body);
-    _userData ??= {'name':0};
+    _userData ??= {'name': 0};
     print(_userData);
 
     notifyListeners();

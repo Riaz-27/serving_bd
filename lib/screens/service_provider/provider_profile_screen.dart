@@ -73,7 +73,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
         ),
         keyboardType: inputType,
         readOnly: readOnly,
-        initialValue: userData[userDataKey],
+        initialValue: userData[userDataKey].toString(),
         validator: (val) {
           if (val == null || val.isEmpty) {
             return 'This field cannot be empty';

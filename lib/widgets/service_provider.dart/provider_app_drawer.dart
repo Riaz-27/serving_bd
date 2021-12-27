@@ -68,12 +68,6 @@ class ProviderAppDrawer extends StatelessWidget {
               text: "Profile",
               index: 1,
             ),
-            drawerList(
-              ctx: context,
-              icon: Icons.shopping_cart_outlined,
-              text: "Orders",
-              index: 2,
-            ),
             const Divider(),
             drawerList(
               ctx: context,
@@ -118,14 +112,6 @@ class ProviderAppDrawer extends StatelessWidget {
               );
               break;
             case 2:
-              Navigator.pushReplacement(
-                ctx,
-                MaterialPageRoute(
-                  builder: (_) => const ServiceProviderScreen(),
-                ),
-              );
-              break;
-            case 3:
               ctx.read<Auth>().logout();
               Navigator.of(ctx).pushReplacement(
                 MaterialPageRoute(

@@ -4,9 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:serving_bd/providers/auth.dart';
 import 'package:serving_bd/providers/orders.dart';
 
-import '../widgets/orders_processing.dart';
-import '../widgets/orders_recent.dart';
-
 class OrderScreen extends StatefulWidget {
   static const routeName = '/orders-page';
 
@@ -52,21 +49,11 @@ class _OrderScreenState extends State<OrderScreen> {
       filtedOrders.removeWhere(
         (item) => item['orderStatus'].toString().contains('Completed'),
       );
-      print(_orders);
     } else {
       filtedOrders.removeWhere(
         (item) => !item['orderStatus'].toString().contains('Completed'),
       );
     }
-
-    // final widgetsList = [
-    //   OrdersProcessing(
-    //     orders: _orders,
-    //   ),
-    //   OrdersRecent(
-    //     orders: _orders,
-    //   ),
-    // ];
 
     return _isLoading
         ? const Center(
