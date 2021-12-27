@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:serving_bd/providers/auth.dart';
 import 'package:serving_bd/providers/orders.dart';
@@ -9,7 +10,7 @@ import '../widgets/orders_recent.dart';
 class OrderScreen extends StatefulWidget {
   static const routeName = '/orders-page';
 
-  OrderScreen({Key? key}) : super(key: key);
+  const OrderScreen({Key? key}) : super(key: key);
 
   @override
   State<OrderScreen> createState() => _OrderScreenState();
@@ -19,11 +20,14 @@ class _OrderScreenState extends State<OrderScreen> {
   final color1 = const Color.fromRGBO(198, 31, 98, 1);
   final color2 = const Color.fromRGBO(55, 54, 86, 1);
 
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
   var _isLoading = true;
   var _orders = [];
   var userId = '';
   var authToken = '';
+  DateTime dateTime = DateTime.now();
+  var filtedOrders = [];
+  // print((_orders[2]['services'][0]['serviceName']));
 
   @override
   void initState() {
@@ -33,7 +37,6 @@ class _OrderScreenState extends State<OrderScreen> {
     userId = context.read<Auth>().userId;
     authToken = context.read<Auth>().token!;
     context.read<Orders>().fetchAndSetOrders(userId, authToken).then((_) {
-      _orders = context.read<Orders>().orders;
       setState(() {
         _isLoading = false;
       });
@@ -43,37 +46,64 @@ class _OrderScreenState extends State<OrderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final widgetsList = [
-      OrdersProcessing(
-        orders: _orders,
-      ),
-      OrdersRecent(orders: _orders,),
-    ];
+    _orders = context.read<Orders>().orders;
+    var filtedOrders = _orders;
+    if (_selectedIndex == 0) {
+      filtedOrders.removeWhere(
+        (item) => item['orderStatus'].toString().contains('Completed'),
+      );
+      print(_orders);
+    } else {
+      filtedOrders.removeWhere(
+        (item) => !item['orderStatus'].toString().contains('Completed'),
+      );
+    }
+
+    // final widgetsList = [
+    //   OrdersProcessing(
+    //     orders: _orders,
+    //   ),
+    //   OrdersRecent(
+    //     orders: _orders,
+    //   ),
+    // ];
 
     return _isLoading
         ? const Center(
             child: CircularProgressIndicator(),
           )
-        : Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: buildTopNav(0, "Processing"),
+        : Scaffold(
+            body: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: buildTopNav(0, "On Going"),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: buildTopNav(1, "Recent Orders"),
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: filtedOrders.length,
+                      itemBuilder: (_, index) {
+                        return _buildOrdersList(
+                          index: index,
+                          orders: filtedOrders,
+                        );
+                      },
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: buildTopNav(1, "Recent Orders"),
-                    ),
-                  ],
-                ),
-                widgetsList[_selectedIndex],
-              ],
+                  ),
+                ],
+              ),
             ),
           );
   }
@@ -103,6 +133,117 @@ class _OrderScreenState extends State<OrderScreen> {
           _selectedIndex = index;
         });
       },
+    );
+  }
+
+  Widget _buildOrdersList({
+    required int index,
+    required List<dynamic> orders,
+  }) {
+    dateTime = DateTime.parse(orders[index]['dateTime'].toString());
+
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  orders[index]['services'][0]['serviceName'],
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                SizedBox(
+                  height: 40,
+                  width: 200,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount:
+                              (orders[index]['services'] as List<dynamic>)
+                                  .length,
+                          itemBuilder: (_, ind) {
+                            return Text(
+                              ' ' +
+                                  orders[index]['services'][ind]['subCatTitle'],
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                              softWrap: false,
+                              overflow: TextOverflow.visible,
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  DateFormat('dd, MMM yyyy · hh:mm a')
+                      .format(dateTime)
+                      .toString(),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Container(
+                  height: 20,
+                  width: 80,
+                  decoration: ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    color: const Color(0xFF489D53),
+                  ),
+                  child: Center(
+                    child: Text(
+                      orders[index]['orderStatus'],
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "৳  ${orders[index]['totalAmount']}",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
+      ),
     );
   }
 }

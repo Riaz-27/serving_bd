@@ -93,20 +93,20 @@ class CheckoutScreen extends StatelessWidget {
               ),
             ),
             GestureDetector(
-              onTap: () {
+              onTap: () async {
+                final userId = context.read<Auth>().userId;
+                final authToken = context.read<Auth>().token;
+                final totalAmount = context.read<Cart>().totalAmount;
+                await context.read<Orders>().addOrder(
+                      authToken: authToken!,
+                      customerDetails: userData,
+                      dateTime: dateTime,
+                      items: _items,
+                      totalAmount: totalAmount,
+                      userId: userId,
+                    );
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (_) {
-                    final userId = context.read<Auth>().userId;
-                    final authToken = context.read<Auth>().token;
-                    final totalAmount = context.read<Cart>().totalAmount;
-                    context.read<Orders>().addOrder(
-                          authToken: authToken!,
-                          customerDetails: userData,
-                          dateTime: dateTime,
-                          items: _items,
-                          totalAmount: totalAmount,
-                          userId: userId,
-                        );
                     return PaymentScreen();
                   }),
                 );

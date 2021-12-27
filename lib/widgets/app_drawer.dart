@@ -112,7 +112,7 @@ class AppDrawer extends StatelessWidget {
                 ctx,
                 MaterialPageRoute(
                   builder: (_) => MainPage(
-                    selectedItemIndex: 3,
+                    selectedItemIndex: 2,
                   ),
                 ),
               );

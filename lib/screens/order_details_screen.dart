@@ -49,6 +49,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         const Text(
                           'When would you like your service?',
                           textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 16, ),
                         ),
                         const SizedBox(
                           height: 10,
@@ -73,7 +74,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 ),
               ),
               SizedBox(
-                height: 110,
+                height: 135,
                 child: Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5)),
@@ -82,8 +83,10 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     child: Column(
                       children: [
                         const Text(
-                          'At what time should the Service Provider arrive?',
+                          'At what time should the Service Provider \narrive?',
                           textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 16, ),
+                          softWrap: true,
                         ),
                         const SizedBox(
                           height: 10,
@@ -111,7 +114,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 ),
               ),
               SizedBox(
-                height: 150,
+                height: 180,
                 child: Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5)),
@@ -122,7 +125,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         const Text(
                           'Order For?',
                           textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 16, ),
                         ),
+                        SizedBox(height: 10,),
                         Form(
                           key: _formkey,
                           child: Expanded(
@@ -143,8 +148,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                         ),
                                         keyboardType: TextInputType.name,
                                         validator: (value) {
-                                          if (value!.isEmpty) {
-                                            return 'Invalid name';
+                                          if (value!.isEmpty ) {
+                                            return 'Name must be given';
                                           }
                                           return null;
                                         },
@@ -166,7 +171,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                         keyboardType: TextInputType.name,
                                         validator: (value) {
                                           if (value!.isEmpty ||
-                                              value.length < 11) {
+                                              value.length != 11) {
                                             return 'Invalid number';
                                           }
                                           return null;
@@ -177,6 +182,10 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                       ),
                                     ),
                                   ],
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(horizontal:10),
+                                  child: Divider(),
                                 ),
                                 Expanded(
                                   flex: 1,
@@ -190,8 +199,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                     ),
                                     keyboardType: TextInputType.name,
                                     validator: (value) {
-                                      if (value!.isEmpty || value.length < 11) {
-                                        return 'Invalid number';
+                                      if (value!.isEmpty) {
+                                        return 'This field cannot be empty';
                                       }
                                       return null;
                                     },
