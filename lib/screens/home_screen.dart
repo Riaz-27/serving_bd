@@ -109,14 +109,14 @@ class HomeScreen extends StatelessWidget {
                         imageurl:
                             "https://s3.ap-south-1.amazonaws.com/cdn-shebaxyz/images/v4_uploads/category_icons/226/default_52x52.webp",
                         title: "Painting",
-                        index: 2,
+                        index: 0,
                       ),
                       buildCategoryCard(
                         context: context,
                         imageurl:
                             "https://s3.ap-south-1.amazonaws.com/cdn-shebaxyz/images/categories_images/icons_png/1583681093_tiwnn_52x52.webp",
                         title: "Shifting",
-                        index: 2,
+                        index: 3,
                       ),
                       buildCategoryCard(
                         context: context,
