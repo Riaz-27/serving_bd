@@ -66,6 +66,7 @@ class Orders with ChangeNotifier {
                   'completeDateTime': orderData['completeDateTime'],
                   'providerUserId': orderData['providerUserId'],
                   'customerUserId': orderData['customerUserId'],
+                  'customerAddress': orderData['customerAddress'],
                 },
               );
             },
@@ -120,6 +121,7 @@ class Orders with ChangeNotifier {
               'completeDateTime': orderData['completeDateTime'],
               'providerUserId': orderData['providerUserId'],
               'customerUserId': orderData['customerUserId'],
+              'customerAddress': orderData['customerAddress'],
             },
           );
         },
@@ -180,6 +182,7 @@ class Orders with ChangeNotifier {
           'completeDateTime': 'NA',
           'providerUserId': 'NA',
           'customerUserId': customerDetails['userId'],
+          'customerAddress': customerDetails['address'],
         },
       ),
     );
@@ -251,8 +254,8 @@ class Orders with ChangeNotifier {
         {
           'orderStatus': 'Completed',
           'completeDateTime': DateTime.now().toIso8601String(),
-          "totalToPay" : 0,
-          "paymentStatus" : "done",
+          "totalToPay": 0,
+          "paymentStatus": "done",
         },
       ),
     );

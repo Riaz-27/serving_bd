@@ -104,6 +104,13 @@ class _OrderListScreenState extends State<OrderListScreen> {
                     color: Colors.red,
                   ),
                 ),
+                Text(
+                  'Address : ${orders[index]['customerAddress'].toString()}',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.green,
+                  ),
+                ),
               ],
             ),
             Column(
